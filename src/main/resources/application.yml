@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: api-userManager
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/todo_db?ssl-mode=REQUIRED&serverTimezone=Europe/Moscow
+    username: no_mercy68
+    password: snigerev68
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+server:
+  port: 8088
