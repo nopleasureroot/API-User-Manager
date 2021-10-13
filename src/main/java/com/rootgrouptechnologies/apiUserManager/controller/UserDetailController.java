@@ -2,6 +2,7 @@ package com.rootgrouptechnologies.apiUserManager.controller;
 
 import com.rootgrouptechnologies.apiUserManager.model.CollectedUser;
 import com.rootgrouptechnologies.apiUserManager.service.UserDetailService;
+import com.rootgrouptechnologies.apiUserManager.utils.ClassUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,14 +21,7 @@ public class UserDetailController {
 
     @GetMapping("/details")
     public ResponseEntity<Object> getUserDetails() {
-        List<CollectedUser> list = userDetailService.getUsersDetails();
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.add("Access-Control-Allow-Origin", "*");
-        headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS'");
-        headers.add("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
-
-        return new ResponseEntity<>(list, headers, HttpStatus.OK);
+        return new ResponseEntity<>(userDetailService.getUsersDetails(), ClassUtils.configureResponseHeaders(), HttpStatus.OK);
     }
 
 }

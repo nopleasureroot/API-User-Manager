@@ -5,10 +5,17 @@ import com.rootgrouptechnologies.apiUserManager.entity.Licence;
 import com.rootgrouptechnologies.apiUserManager.entity.LicenceType;
 import com.rootgrouptechnologies.apiUserManager.entity.User;
 import kong.unirest.json.JSONObject;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class ClassUtils {
     public static JSONObject convertData(User user, Licence licence, LicenceType licenceType, Billing billing) {
         return new JSONObject()
+                .put("id", user.getId())
                 .put("common-data", convertCommonData(user, licenceType))
                 .put("licence-data", convertLicenceData(licence))
                 .put("renew-data", convertRenewData(licence, licenceType))
@@ -56,5 +63,19 @@ public class ClassUtils {
                 .put("cartEnding", "cart not found")
                 .put("cartDate", "cart not found")
                 .put("paymentId", "cart not found");
+    }
+
+    public static HttpHeaders configureResponseHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+
+        // CORS headers
+        headers.setAccessControlAllowOrigin("*");
+        headers.setAccessControlAllowMethods(Arrays.asList(HttpMethod.GET, HttpMethod.POST, HttpMethod.PATCH, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.OPTIONS));
+        headers.setAccessControlAllowHeaders(Arrays.asList("Origin", "Content-Type", "X-Auth-Token"));
+
+        //Custom-Headers
+        headers.add("X-Api-Version", "1");
+
+        return headers;
     }
 }
