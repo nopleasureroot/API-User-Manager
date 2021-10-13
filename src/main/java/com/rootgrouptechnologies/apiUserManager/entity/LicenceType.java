@@ -1,4 +1,4 @@
-package com.rootgrouptechnologies.apiUserManager.db.entity;
+package com.rootgrouptechnologies.apiUserManager.entity;
 
 import javax.persistence.*;
 

@@ -1,4 +1,4 @@
-package com.rootgrouptechnologies.apiUserManager.db.entity;
+package com.rootgrouptechnologies.apiUserManager.entity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,7 +10,6 @@ public class User {
     @GeneratedValue
     @Column(name = "id")
     private Integer id;
-
 
     @Column(name = "discord_avatar")
     private String discordAvatar;
@@ -31,47 +30,24 @@ public class User {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getDiscordAvatar() {
         return discordAvatar;
-    }
-
-    public void setDiscordAvatar(String discordAvatar) {
-        this.discordAvatar = discordAvatar;
     }
 
     public String getDiscordEmail() {
         return discordEmail;
     }
 
-    public void setDiscordEmail(String discordEmail) {
-        this.discordEmail = discordEmail;
-    }
-
     public String getDiscordId() {
         return discordId;
-    }
-
-    public void setDiscordId(String discordId) {
-        this.discordId = discordId;
     }
 
     public String getDiscordUsername() {
         return discordUsername;
     }
 
-    public void setDiscordUsername(String discordUsername) {
-        this.discordUsername = discordUsername;
-    }
-
     public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
 }

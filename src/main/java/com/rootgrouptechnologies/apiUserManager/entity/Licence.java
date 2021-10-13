@@ -1,4 +1,4 @@
-package com.rootgrouptechnologies.apiUserManager.db.entity;
+package com.rootgrouptechnologies.apiUserManager.entity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -29,9 +29,7 @@ public class Licence {
     @Column(name = "activated")
     private Boolean activated;
 
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
 
     public void setId(Integer id) {
         this.id = id;

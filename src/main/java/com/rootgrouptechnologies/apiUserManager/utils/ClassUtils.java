@@ -1,9 +1,9 @@
 package com.rootgrouptechnologies.apiUserManager.utils;
 
-import com.rootgrouptechnologies.apiUserManager.db.entity.Billing;
-import com.rootgrouptechnologies.apiUserManager.db.entity.Licence;
-import com.rootgrouptechnologies.apiUserManager.db.entity.LicenceType;
-import com.rootgrouptechnologies.apiUserManager.db.entity.User;
+import com.rootgrouptechnologies.apiUserManager.entity.Billing;
+import com.rootgrouptechnologies.apiUserManager.entity.Licence;
+import com.rootgrouptechnologies.apiUserManager.entity.LicenceType;
+import com.rootgrouptechnologies.apiUserManager.entity.User;
 import kong.unirest.json.JSONObject;
 
 public class ClassUtils {

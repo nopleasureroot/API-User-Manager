@@ -1,4 +1,4 @@
-package com.rootgrouptechnologies.apiUserManager.db.entity;
+package com.rootgrouptechnologies.apiUserManager.entity;
 
 import javax.persistence.*;
 
@@ -25,9 +25,7 @@ public class Billing {
     @Column(name = "user_id")
     private Integer userId;
 
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
 
     public Boolean getActive() {
         return active;
