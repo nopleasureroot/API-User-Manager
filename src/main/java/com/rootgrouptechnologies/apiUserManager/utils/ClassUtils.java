@@ -1,10 +1,5 @@
 package com.rootgrouptechnologies.apiUserManager.utils;
 
-import com.rootgrouptechnologies.apiUserManager.entity.Billing;
-import com.rootgrouptechnologies.apiUserManager.entity.Licence;
-import com.rootgrouptechnologies.apiUserManager.entity.LicenceType;
-import com.rootgrouptechnologies.apiUserManager.entity.User;
-import kong.unirest.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 

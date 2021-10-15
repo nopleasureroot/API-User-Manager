@@ -35,7 +35,7 @@ public class UserDetailService {
     }
 
     private List<UserDTO> collectUserModels(List<User> users, LicenceRepository licenceRepository, LicenceTypeRepository licenceTypeRepository, BillingRepository billingRepository) {
-        List<UserDTO> userDTO = new LinkedList<>();
+        List<UserDTO> userDTOS = new LinkedList<>();
 
         for (User user : users) {
             if (user.getDiscordUsername() != null && user.getDiscordId() != null) {
@@ -45,11 +45,11 @@ public class UserDetailService {
                 if (licence != null) {
                     LicenceType licenceType = licenceTypeRepository.findLicenceTypeById(licence.getLicenceTypeId());
 
-                    userDTO.add(UserMapper.INSTANCE.toUserDTO(user, licence, licenceType, billing));
+                    userDTOS.add(UserMapper.INSTANCE.toUserDTO(user, licence, licenceType, billing));
                 }
             }
         }
 
-        return userDTO;
+        return userDTOS;
     }
 }
