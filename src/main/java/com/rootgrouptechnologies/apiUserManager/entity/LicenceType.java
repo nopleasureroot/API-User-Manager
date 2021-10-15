@@ -1,7 +1,12 @@
 package com.rootgrouptechnologies.apiUserManager.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "licence_type" , schema = "public")
 public class LicenceType {
@@ -34,7 +39,7 @@ public class LicenceType {
     private Integer pInitialPrice;
 
     @Column(name = "p_renew_price")
-    private Integer pRenewPrice;
+    private Integer renewPrice;
 
     @Column(name = "unbindable")
     private Boolean unbindable;
@@ -51,63 +56,4 @@ public class LicenceType {
     @Column(name = "major_role_name")
     private String majorRoleName;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getaCurrency() {
-        return aCurrency;
-    }
-
-    public Integer getaInitialPrice() {
-        return aInitialPrice;
-    }
-
-    public Integer getaRenewPrice() {
-        return aRenewPrice;
-    }
-
-    public Long getDiscordRoles() {
-        return discordRoles;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getpCurrency() {
-        return pCurrency;
-    }
-
-    public Integer getpInitialPrice() {
-        return pInitialPrice;
-    }
-
-    public Integer getpRenewPrice() {
-        return pRenewPrice;
-    }
-
-    public Boolean getUnbindable() {
-        return unbindable;
-    }
-
-    public String getLang() {
-        return lang;
-    }
-
-    public Boolean getOpen() {
-        return open;
-    }
-
-    public Integer getMajorRoleColor() {
-        return majorRoleColor;
-    }
-
-    public String getMajorRoleName() {
-        return majorRoleName;
-    }
-
-    public Boolean getFreeToRenew() {
-        return freeToRenew;
-    }
 }

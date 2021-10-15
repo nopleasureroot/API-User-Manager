@@ -1,4 +1,4 @@
-package com.rootgrouptechnologies.apiUserManager.db;
+package com.rootgrouptechnologies.apiUserManager.repository;
 
 import com.rootgrouptechnologies.apiUserManager.entity.Licence;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,8 +1,11 @@
 package com.rootgrouptechnologies.apiUserManager.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Date;
 
+@Data
 @Entity
 @Table(name = "user", schema = "public")
 public class User {
@@ -25,29 +28,4 @@ public class User {
 
     @Column(name = "creation_date")
     private Date creationDate;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getDiscordAvatar() {
-        return discordAvatar;
-    }
-
-    public String getDiscordEmail() {
-        return discordEmail;
-    }
-
-    public String getDiscordId() {
-        return discordId;
-    }
-
-    public String getDiscordUsername() {
-        return discordUsername;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
 }

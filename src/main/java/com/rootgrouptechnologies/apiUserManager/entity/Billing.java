@@ -1,7 +1,10 @@
 package com.rootgrouptechnologies.apiUserManager.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
+@Data
 @Entity
 @Table(name = "billing", schema = "public")
 public class Billing {
@@ -25,25 +28,4 @@ public class Billing {
     @Column(name = "user_id")
     private Integer userId;
 
-    public Integer getId() { return id; }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public String getCardDate() {
-        return cardDate;
-    }
-
-    public Integer getCartNumberEnding() {
-        return cartNumberEnding;
-    }
-
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
 }
