@@ -21,6 +21,7 @@ public interface UserMapper {
     @Mapping(source = "user.id", target = "id")
     @Mapping(source = "user.discordEmail", target = "discordEmail")
     @Mapping(source = "user.discordUsername", target = "discordUsername")
+    @Mapping(source = "user.creationDate", target = "creationDate")
     @Mapping(source = "licenceType.renewPrice", target = "licenceTypeDTO.renewalPrice")
     @Mapping(source = "licenceType.majorRoleName", target = "licenceTypeDTO.role")
     @Mapping(source = "billing", target = "billingDTO", qualifiedByName = "toBillingDTO")
@@ -31,12 +32,12 @@ public interface UserMapper {
     default LicenceDTO toLicenceDTO(Licence licence) {
         String key;
         Boolean bind;
-        Date renewal;
+        String renewal;
 
         if (licence.getRenewalDate() != null) {
             key = licence.getIdentifier();
             bind = licence.getActivated();
-            renewal = licence.getRenewalDate();
+            renewal = licence.getRenewalDate().toString().split(" ")[0];
         } else {
             key = licence.getIdentifier();
             bind = false;

@@ -27,5 +27,9 @@ public class User {
     private String discordUsername;
 
     @Column(name = "creation_date")
-    private Date creationDate;
+    private String creationDate;
+
+    public String getCreationDate() {
+        return creationDate.split(" ")[0];
+    }
 }

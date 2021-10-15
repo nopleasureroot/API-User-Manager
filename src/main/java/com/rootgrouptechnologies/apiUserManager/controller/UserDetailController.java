@@ -1,6 +1,5 @@
 package com.rootgrouptechnologies.apiUserManager.controller;
 
-import com.rootgrouptechnologies.apiUserManager.model.mapper.UserMapper;
 import com.rootgrouptechnologies.apiUserManager.service.UserDetailService;
 import com.rootgrouptechnologies.apiUserManager.utils.ClassUtils;
 import lombok.RequiredArgsConstructor;

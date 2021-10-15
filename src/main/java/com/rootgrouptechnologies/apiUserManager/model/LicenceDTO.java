@@ -13,5 +13,5 @@ import java.util.Date;
 public class LicenceDTO {
     private final String licenceKey;
     private final Boolean keyBind;
-    private final Date renewalDate;
+    private final String renewalDate;
 }
