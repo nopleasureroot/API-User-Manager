@@ -18,7 +18,7 @@ public class UserDetailController {
 
     @GetMapping("/details")
     public ResponseEntity<Object> getUserDetails() {
-        return new ResponseEntity<>(userDetailService.getUsersDetails(), ClassUtils.configureResponseHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(userDetailService.getUsersDetails(), HttpStatus.OK);
     }
 
 }

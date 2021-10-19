@@ -13,7 +13,7 @@ public class BillingService {
     private final LicenceRepository licenceRepository;
 
     public LicenceDTO changeRenewalDate(Licence licence) {
-        Licence userLicence = licenceRepository.findLicenceByUserId(licence.getUserId());
+        Licence userLicence = licenceRepository.findLicenceByUserId(licence.getId());
 
         userLicence.setRenewalDate(licence.getRenewalDate());
 

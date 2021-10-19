@@ -17,6 +17,6 @@ public class BillingController {
 
     @PutMapping("/")
     public ResponseEntity<Object> updateRenewalDate(@RequestBody Licence licence) {
-        return new ResponseEntity<>(billingService.changeRenewalDate(licence), ClassUtils.configureResponseHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(billingService.changeRenewalDate(licence), HttpStatus.OK);
     }
 }
