@@ -15,13 +15,13 @@ public class Licence {
     private Integer id;
 
     @Column(name = "creation_date")
-    private Date creationDate;
+    private String creationDate;
 
     @Column(name = "identifier")
     private String identifier;
 
     @Column(name = "renewal_date")
-    private Date renewalDate;
+    private String renewalDate;
 
     @Column(name = "licence_type_id")
     private Integer licenceTypeId;

@@ -12,8 +12,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
-import java.util.Date;
-
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
@@ -37,7 +35,7 @@ public interface UserMapper {
         if (licence.getRenewalDate() != null) {
             key = licence.getIdentifier();
             bind = licence.getActivated();
-            renewal = licence.getRenewalDate().toString().split(" ")[0];
+            renewal = licence.getRenewalDate().split(" ")[0];
         } else {
             key = licence.getIdentifier();
             bind = false;
