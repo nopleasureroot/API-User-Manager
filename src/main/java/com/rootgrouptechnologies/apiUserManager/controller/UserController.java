@@ -1,7 +1,6 @@
 package com.rootgrouptechnologies.apiUserManager.controller;
 
 import com.rootgrouptechnologies.apiUserManager.service.UserService;
-import com.rootgrouptechnologies.apiUserManager.utils.ClassUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +14,11 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable Integer id) {
-        return new ResponseEntity<>(userService.deleteUser(id), ClassUtils.configureResponseHeaders(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable Integer id) {
-        return new ResponseEntity<>(userService.deleteUser(id), ClassUtils.configureResponseHeaders(), HttpStatus.OK);
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Object> updateUser(@PathVariable Integer id) {
+//        return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
+//    }
 }

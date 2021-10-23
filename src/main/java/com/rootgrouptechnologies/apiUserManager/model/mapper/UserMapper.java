@@ -32,6 +32,10 @@ public interface UserMapper {
         Boolean bind;
         String renewal;
 
+        if (licence == null) {
+            return null;
+        }
+
         if (licence.getRenewalDate() != null) {
             key = licence.getIdentifier();
             bind = licence.getActivated();
@@ -51,6 +55,10 @@ public interface UserMapper {
         Integer cartEnding;
         String paymentId;
         boolean isBind;
+
+        if (billing == null) {
+            return null;
+        }
 
         if (billing.getCardDate() != null && billing.getCartNumberEnding() != null) {
             cartDate = billing.getCardDate();

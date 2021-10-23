@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8082
   servlet:
     context-path: /api/v1
 spring:
@@ -7,7 +7,7 @@ spring:
     name: API-User-Manager
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
-    username: dmitrij
+    username: postgres
 springdoc:
   swagger-ui:
     path: /documentation
