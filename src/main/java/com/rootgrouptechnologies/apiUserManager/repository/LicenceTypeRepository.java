@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LicenceTypeRepository extends JpaRepository<LicenceType, Integer> {
     LicenceType findLicenceTypeById(Integer id);
+    LicenceType findLicenceTypeByRenewPriceAndMajorRoleName(Integer renewPrice, String name);
+    LicenceType findFirstByRenewPrice(Integer renewPrice);
 }

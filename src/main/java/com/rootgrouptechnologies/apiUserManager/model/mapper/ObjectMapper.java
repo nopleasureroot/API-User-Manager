@@ -4,27 +4,28 @@ import com.rootgrouptechnologies.apiUserManager.entity.Billing;
 import com.rootgrouptechnologies.apiUserManager.entity.Licence;
 import com.rootgrouptechnologies.apiUserManager.entity.LicenceType;
 import com.rootgrouptechnologies.apiUserManager.entity.User;
-import com.rootgrouptechnologies.apiUserManager.model.BillingDTO;
-import com.rootgrouptechnologies.apiUserManager.model.LicenceDTO;
-import com.rootgrouptechnologies.apiUserManager.model.UserDTO;
+import com.rootgrouptechnologies.apiUserManager.model.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+public interface ObjectMapper {
+    ObjectMapper INSTANCE = Mappers.getMapper(ObjectMapper.class);
 
-    @Mapping(source = "user.id", target = "id")
-    @Mapping(source = "user.discordEmail", target = "discordEmail")
-    @Mapping(source = "user.discordUsername", target = "discordUsername")
-    @Mapping(source = "user.creationDate", target = "creationDate")
-    @Mapping(source = "licenceType.renewPrice", target = "licenceTypeDTO.renewalPrice")
-    @Mapping(source = "licenceType.majorRoleName", target = "licenceTypeDTO.role")
     @Mapping(source = "billing", target = "billingDTO", qualifiedByName = "toBillingDTO")
     @Mapping(source = "licence", target = "licenceDTO", qualifiedByName = "toLicenceDTO")
-    UserDTO toUserDTO(User user, Licence licence, LicenceType licenceType, Billing billing);
+    @Mapping(source = "user", target = "userDTO")
+    @Mapping(source = "licenceType", target = "licenceTypeDTO", qualifiedByName = "toLicenceDTO")
+    ResultDTO toResultDTO(User user, Licence licence, LicenceType licenceType, Billing billing);
+
+    UserDTO toUserDTO(User user);
+
+    @Named("toLicenceDTO")
+    @Mapping(source = "licenceType.renewPrice", target = "renewalPrice")
+    @Mapping(source = "licenceType.majorRoleName", target = "role")
+    LicenceTypeDTO toLicenceTypeDTO(LicenceType licenceType);
 
     @Named("toLicenceDTO")
     default LicenceDTO toLicenceDTO(Licence licence) {

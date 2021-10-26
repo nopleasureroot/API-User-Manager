@@ -1,6 +1,7 @@
 package com.rootgrouptechnologies.apiUserManager.service;
 
-import com.rootgrouptechnologies.apiUserManager.model.mapper.UserMapper;
+import com.rootgrouptechnologies.apiUserManager.model.ResultDTO;
+import com.rootgrouptechnologies.apiUserManager.model.mapper.ObjectMapper;
 import com.rootgrouptechnologies.apiUserManager.repository.BillingRepository;
 import com.rootgrouptechnologies.apiUserManager.repository.LicenceRepository;
 import com.rootgrouptechnologies.apiUserManager.repository.LicenceTypeRepository;
@@ -9,11 +10,8 @@ import com.rootgrouptechnologies.apiUserManager.entity.Billing;
 import com.rootgrouptechnologies.apiUserManager.entity.Licence;
 import com.rootgrouptechnologies.apiUserManager.entity.LicenceType;
 import com.rootgrouptechnologies.apiUserManager.entity.User;
-import com.rootgrouptechnologies.apiUserManager.model.UserDTO;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -28,14 +26,14 @@ public class UserDetailService {
     private final LicenceTypeRepository licenceTypeRepository;
     private final BillingRepository billingRepository;
 
-    public List<UserDTO> getUsersDetails() {
+    public List<ResultDTO> getUsersDetails() {
         List<User> allUsers = userRepository.findAll();
 
         return collectUserModels(allUsers, licenceRepository, licenceTypeRepository, billingRepository);
     }
 
-    private List<UserDTO> collectUserModels(List<User> users, LicenceRepository licenceRepository, LicenceTypeRepository licenceTypeRepository, BillingRepository billingRepository) {
-        List<UserDTO> userDTOS = new LinkedList<>();
+    private List<ResultDTO> collectUserModels(List<User> users, LicenceRepository licenceRepository, LicenceTypeRepository licenceTypeRepository, BillingRepository billingRepository) {
+        List<ResultDTO> userDTOS = new LinkedList<>();
 
         for (User user : users) {
             if (user.getDiscordUsername() != null && user.getDiscordId() != null) {
@@ -45,7 +43,7 @@ public class UserDetailService {
                 if (licence != null) {
                     LicenceType licenceType = licenceTypeRepository.findLicenceTypeById(licence.getLicenceTypeId());
 
-                    userDTOS.add(UserMapper.INSTANCE.toUserDTO(user, licence, licenceType, billing));
+                    userDTOS.add(ObjectMapper.INSTANCE.toResultDTO(user, licence, licenceType, billing));
                 }
             }
         }

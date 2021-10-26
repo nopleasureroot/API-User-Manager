@@ -10,7 +10,4 @@ public class UserDTO {
     private final String discordUsername;
     private final String discordEmail;
     private final String creationDate;
-    private final LicenceDTO licenceDTO;
-    private final BillingDTO billingDTO;
-    private final LicenceTypeDTO licenceTypeDTO;
 }

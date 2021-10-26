@@ -1,5 +1,6 @@
 package com.rootgrouptechnologies.apiUserManager.controller;
 
+import com.rootgrouptechnologies.apiUserManager.entity.User;
 import com.rootgrouptechnologies.apiUserManager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,8 @@ public class UserController {
         return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.ACCEPTED);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Object> updateUser(@PathVariable Integer id) {
-//        return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
-//    }
+    @PutMapping("/")
+    public ResponseEntity<Object> updateUser(@RequestBody User user) {
+        return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
+    }
 }

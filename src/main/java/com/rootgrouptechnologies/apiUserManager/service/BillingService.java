@@ -2,7 +2,7 @@ package com.rootgrouptechnologies.apiUserManager.service;
 
 import com.rootgrouptechnologies.apiUserManager.entity.Licence;
 import com.rootgrouptechnologies.apiUserManager.model.LicenceDTO;
-import com.rootgrouptechnologies.apiUserManager.model.mapper.UserMapper;
+import com.rootgrouptechnologies.apiUserManager.model.mapper.ObjectMapper;
 import com.rootgrouptechnologies.apiUserManager.repository.LicenceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,6 @@ public class BillingService {
 
         licenceRepository.save(userLicence);
 
-        return UserMapper.INSTANCE.toLicenceDTO(userLicence);
+        return ObjectMapper.INSTANCE.toLicenceDTO(userLicence);
     }
 }

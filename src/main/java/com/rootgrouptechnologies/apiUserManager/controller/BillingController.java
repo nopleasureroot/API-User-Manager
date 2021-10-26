@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/billing")
+@RequestMapping("/billings")
 public class BillingController {
     private final BillingService billingService;
 
     @PutMapping("/")
-    public ResponseEntity<Object> updateRenewalDate(@RequestBody Licence licence) {
+    public ResponseEntity<Object> changeRenewalDate(@RequestBody Licence licence) {
         return new ResponseEntity<>(billingService.changeRenewalDate(licence), HttpStatus.OK);
     }
 }
