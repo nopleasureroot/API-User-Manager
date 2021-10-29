@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "licence" , schema = "public")
 public class Licence {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -30,5 +30,4 @@ public class Licence {
 
     @Column(name = "activated")
     private Boolean activated;
-
 }

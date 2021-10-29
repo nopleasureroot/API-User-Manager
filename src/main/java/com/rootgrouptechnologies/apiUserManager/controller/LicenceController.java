@@ -1,5 +1,6 @@
 package com.rootgrouptechnologies.apiUserManager.controller;
 
+import com.rootgrouptechnologies.apiUserManager.entity.Licence;
 import com.rootgrouptechnologies.apiUserManager.entity.LicenceType;
 import com.rootgrouptechnologies.apiUserManager.service.LicenceService;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,10 @@ public class LicenceController {
     @PutMapping("/{id}")
     public ResponseEntity<Object> changeLicencesType(@PathVariable Integer id, @RequestBody LicenceType licenceType) throws Exception {
         return new ResponseEntity<>(licenceService.changeLicenceType(id , licenceType), HttpStatus.OK);
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<Object> createLicence(@RequestBody Licence licence) {
+        return new ResponseEntity<>(licenceService.createLicence(licence), HttpStatus.CREATED);
     }
 }

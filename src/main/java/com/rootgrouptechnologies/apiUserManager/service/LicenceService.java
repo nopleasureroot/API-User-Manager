@@ -8,16 +8,22 @@ import com.rootgrouptechnologies.apiUserManager.model.mapper.ObjectMapper;
 import com.rootgrouptechnologies.apiUserManager.repository.LicenceRepository;
 import com.rootgrouptechnologies.apiUserManager.repository.LicenceTypeRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.text.CharacterPredicates;
+import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
 public class LicenceService {
     private final LicenceRepository licenceRepository;
     private final LicenceTypeRepository licenceTypeRepository;
+    private final LicenceHelper licenceHelper = new LicenceHelper();
 
     public List<LicenceDTO> getLicences() {
         List<LicenceDTO> licenceDTOS = new LinkedList<>();
@@ -36,7 +42,7 @@ public class LicenceService {
         Integer newRenewal = licenceType.getRenewPrice();
         Integer oldRenewal = currentLicenceType.getRenewPrice();
 
-        if (checkAmountPriceAndRole(newRenewal, oldRenewal, licenceType.getMajorRoleName())) {
+        if (licenceHelper.checkAmountPriceAndRole(newRenewal, oldRenewal, licenceType.getMajorRoleName())) {
             LicenceType newLicenceType =
                     (licenceType.getMajorRoleName().equals("Customer") && newRenewal.equals(2500))
                     ? licenceTypeRepository.findFirstByRenewPrice(newRenewal)
@@ -53,15 +59,62 @@ public class LicenceService {
         return ObjectMapper.INSTANCE.toLicenceTypeDTO(currentLicenceType);
     }
 
-    private boolean checkAmountPriceAndRole(Integer newRenewal, Integer oldRenewal, String roleName) throws Exception {
-        if (newRenewal.equals(oldRenewal)) {
-            throw new Exception("The user has a payment equal to the entered one, enter the amount different from the current one");
+    public LicenceDTO createLicence(Licence licence) {
+        String licenceToken = licenceHelper.generateLicenceToken();
+        String renewalDate = licence.getRenewalDate();
+        Integer licenceTypeId = licence.getLicenceTypeId();
+        String formattedDate = licenceHelper.getFormattedNowDate();
+
+        Licence newLicence = licenceHelper.collectNewLicence(licenceToken, renewalDate, licenceTypeId, formattedDate);
+        licenceRepository.save(newLicence);
+
+        return ObjectMapper.INSTANCE.toLicenceDTO(newLicence);
+    }
+
+    class LicenceHelper {
+        private boolean checkAmountPriceAndRole(Integer newRenewal, Integer oldRenewal, String roleName) throws Exception {
+            if (newRenewal.equals(oldRenewal)) {
+                throw new Exception("The user has a payment equal to the entered one, enter the amount different from the current one");
+            }
+
+            for (LicenceType licType : licenceTypeRepository.findAll()) {
+                if (licType.getRenewPrice().equals(newRenewal) && licType.getMajorRoleName().equals(roleName))
+                    return true;
+            }
+
+            throw new Exception("Enter the amount based on existing licenses");
         }
 
-        for (LicenceType licType : licenceTypeRepository.findAll()) {
-            if (licType.getRenewPrice().equals(newRenewal) && licType.getMajorRoleName().equals(roleName)) return true;
+        private String getFormattedNowDate() {
+            return LocalDateTime.now()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
         }
 
-        throw new Exception("Enter the amount based on existing licenses");
+        private String generateLicenceToken() {
+            RandomStringGenerator randomStringGenerator = new RandomStringGenerator
+                    .Builder()
+                    .withinRange('A', 'z')
+                    .filteredBy(CharacterPredicates.LETTERS)
+                    .build();
+
+            String licenceToken = randomStringGenerator.generate(20).toUpperCase(Locale.ROOT);
+
+            if (licenceRepository.findLicenceByIdentifier(licenceToken) != null) return generateLicenceToken();
+
+            return licenceToken;
+        }
+
+        public Licence collectNewLicence(String licenceToken, String renewalDate, Integer licenceTypeId, String formattedDate) {
+            Licence licence = new Licence();
+
+            licence.setCreationDate(formattedDate);
+            licence.setLicenceTypeId(licenceTypeId);
+            licence.setRenewalDate(renewalDate);
+            licence.setActivated(false);
+            licence.setIdentifier(licenceToken);
+            licence.setUserId(null);
+
+            return licence;
+        }
     }
 }

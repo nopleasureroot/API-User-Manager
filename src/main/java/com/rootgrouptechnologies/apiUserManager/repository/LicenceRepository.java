@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface LicenceRepository extends JpaRepository<Licence, Integer> {
     Licence findLicenceByUserId(Integer userId);
     void deleteByUserId(Integer id);
+    Licence findLicenceByIdentifier(String identifier);
 }
