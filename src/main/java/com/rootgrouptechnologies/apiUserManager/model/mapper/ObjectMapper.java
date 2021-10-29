@@ -29,6 +29,7 @@ public interface ObjectMapper {
 
     @Named("toLicenceDTO")
     default LicenceDTO toLicenceDTO(Licence licence) {
+        Integer id;
         String key;
         Boolean bind;
         String renewal;
@@ -38,16 +39,18 @@ public interface ObjectMapper {
         }
 
         if (licence.getRenewalDate() != null) {
+            id = licence.getId();
             key = licence.getIdentifier();
             bind = licence.getActivated();
             renewal = licence.getRenewalDate().split(" ")[0];
         } else {
+            id = licence.getId();
             key = licence.getIdentifier();
             bind = false;
             renewal = null;
         }
 
-        return new LicenceDTO(key, bind, renewal);
+        return new LicenceDTO(id, key, bind, renewal);
     }
 
     @Named("toBillingDTO")

@@ -19,13 +19,18 @@ public class LicenceController {
         return new ResponseEntity<>(licenceService.getLicences(), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> changeLicencesType(@PathVariable Integer id, @RequestBody LicenceType licenceType) throws Exception {
-        return new ResponseEntity<>(licenceService.changeLicenceType(id , licenceType), HttpStatus.OK);
-    }
-
     @PostMapping("/")
     public ResponseEntity<Object> createLicence(@RequestBody Licence licence) {
         return new ResponseEntity<>(licenceService.createLicence(licence), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> changeLicenceType(@PathVariable Integer id, @RequestBody LicenceType licenceType) throws Exception {
+        return new ResponseEntity<>(licenceService.changeLicenceType(id , licenceType), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteLicence(@PathVariable Integer id) {
+        return new ResponseEntity<>(licenceService.deleteLicence(id), HttpStatus.ACCEPTED);
     }
 }

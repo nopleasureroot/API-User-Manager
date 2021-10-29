@@ -60,16 +60,25 @@ public class LicenceService {
     }
 
     public LicenceDTO createLicence(Licence licence) {
+        String formattedDate = licenceHelper.getFormattedNowDate();
         String licenceToken = licenceHelper.generateLicenceToken();
         String renewalDate = licence.getRenewalDate();
         Integer licenceTypeId = licence.getLicenceTypeId();
-        String formattedDate = licenceHelper.getFormattedNowDate();
 
         Licence newLicence = licenceHelper.collectNewLicence(licenceToken, renewalDate, licenceTypeId, formattedDate);
         licenceRepository.save(newLicence);
 
         return ObjectMapper.INSTANCE.toLicenceDTO(newLicence);
     }
+
+    public LicenceDTO deleteLicence(Integer id) {
+        Licence entity = licenceRepository.findLicenceById(id);
+
+        licenceRepository.deleteById(id);
+
+        return ObjectMapper.INSTANCE.toLicenceDTO(entity);
+    }
+
 
     class LicenceHelper {
         private boolean checkAmountPriceAndRole(Integer newRenewal, Integer oldRenewal, String roleName) throws Exception {
@@ -104,7 +113,7 @@ public class LicenceService {
             return licenceToken;
         }
 
-        public Licence collectNewLicence(String licenceToken, String renewalDate, Integer licenceTypeId, String formattedDate) {
+        private Licence collectNewLicence(String licenceToken, String renewalDate, Integer licenceTypeId, String formattedDate) {
             Licence licence = new Licence();
 
             licence.setCreationDate(formattedDate);
