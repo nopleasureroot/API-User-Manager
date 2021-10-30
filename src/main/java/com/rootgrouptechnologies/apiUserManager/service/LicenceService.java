@@ -42,7 +42,7 @@ public class LicenceService {
         Integer newRenewal = licenceType.getRenewPrice();
         Integer oldRenewal = currentLicenceType.getRenewPrice();
 
-        if (licenceHelper.checkAmountPriceAndRole(newRenewal, oldRenewal, licenceType.getMajorRoleName())) {
+        if (licenceHelper.checkAmountPriceAndRole(newRenewal, oldRenewal, licenceType.getMajorRoleName(), licenceTypeRepository)) {
             LicenceType newLicenceType =
                     (licenceType.getMajorRoleName().equals("Customer") && newRenewal.equals(2500))
                     ? licenceTypeRepository.findFirstByRenewPrice(newRenewal)
@@ -61,7 +61,7 @@ public class LicenceService {
 
     public LicenceDTO createLicence(Licence licence) {
         String formattedDate = licenceHelper.getFormattedNowDate();
-        String licenceToken = licenceHelper.generateLicenceToken();
+        String licenceToken = licenceHelper.generateLicenceToken(licenceRepository);
         String renewalDate = licence.getRenewalDate();
         Integer licenceTypeId = licence.getLicenceTypeId();
 
@@ -80,8 +80,8 @@ public class LicenceService {
     }
 
 
-    class LicenceHelper {
-        private boolean checkAmountPriceAndRole(Integer newRenewal, Integer oldRenewal, String roleName) throws Exception {
+    static class LicenceHelper {
+        private boolean checkAmountPriceAndRole(Integer newRenewal, Integer oldRenewal, String roleName, LicenceTypeRepository licenceTypeRepository) throws Exception {
             if (newRenewal.equals(oldRenewal)) {
                 throw new Exception("The user has a payment equal to the entered one, enter the amount different from the current one");
             }
@@ -99,7 +99,7 @@ public class LicenceService {
                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
         }
 
-        private String generateLicenceToken() {
+        private String generateLicenceToken(LicenceRepository licenceRepository) {
             RandomStringGenerator randomStringGenerator = new RandomStringGenerator
                     .Builder()
                     .withinRange('A', 'z')
@@ -108,7 +108,7 @@ public class LicenceService {
 
             String licenceToken = randomStringGenerator.generate(20).toUpperCase(Locale.ROOT);
 
-            if (licenceRepository.findLicenceByIdentifier(licenceToken) != null) return generateLicenceToken();
+            if (licenceRepository.findLicenceByIdentifier(licenceToken) != null) return generateLicenceToken(licenceRepository);
 
             return licenceToken;
         }

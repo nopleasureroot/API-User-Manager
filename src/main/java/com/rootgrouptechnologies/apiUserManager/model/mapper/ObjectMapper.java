@@ -1,9 +1,6 @@
 package com.rootgrouptechnologies.apiUserManager.model.mapper;
 
-import com.rootgrouptechnologies.apiUserManager.entity.Billing;
-import com.rootgrouptechnologies.apiUserManager.entity.Licence;
-import com.rootgrouptechnologies.apiUserManager.entity.LicenceType;
-import com.rootgrouptechnologies.apiUserManager.entity.User;
+import com.rootgrouptechnologies.apiUserManager.entity.*;
 import com.rootgrouptechnologies.apiUserManager.model.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,12 +14,16 @@ public interface ObjectMapper {
     @Mapping(source = "billing", target = "billingDTO", qualifiedByName = "toBillingDTO")
     @Mapping(source = "licence", target = "licenceDTO", qualifiedByName = "toLicenceDTO")
     @Mapping(source = "user", target = "userDTO")
-    @Mapping(source = "licenceType", target = "licenceTypeDTO", qualifiedByName = "toLicenceDTO")
-    ResultDTO toResultDTO(User user, Licence licence, LicenceType licenceType, Billing billing);
+    @Mapping(source = "licenceType", target = "licenceTypeDTO", qualifiedByName = "toLicenceTypeDTO")
+    @Mapping(source = "payment", target = "paymentDTO", qualifiedByName = "toPaymentDTO")
+    ResultDTO toResultDTO(User user, Licence licence, LicenceType licenceType, Billing billing, Payment payment);
 
     UserDTO toUserDTO(User user);
 
-    @Named("toLicenceDTO")
+    @Named("toPaymentDTO")
+    PaymentDTO toPaymentDTO(Payment payment);
+
+    @Named("toLicenceTypeDTO")
     @Mapping(source = "licenceType.renewPrice", target = "renewalPrice")
     @Mapping(source = "licenceType.majorRoleName", target = "role")
     LicenceTypeDTO toLicenceTypeDTO(LicenceType licenceType);

@@ -10,4 +10,5 @@ public class ResultDTO {
     private final LicenceDTO licenceDTO;
     private final LicenceTypeDTO licenceTypeDTO;
     private final BillingDTO billingDTO;
+    private final PaymentDTO paymentDTO;
 }

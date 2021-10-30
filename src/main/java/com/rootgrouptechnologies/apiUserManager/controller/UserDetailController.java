@@ -18,5 +18,4 @@ public class UserDetailController {
     public ResponseEntity<Object> getUserDetails() {
         return new ResponseEntity<>(userDetailService.getUsersDetails(), HttpStatus.OK);
     }
-
 }

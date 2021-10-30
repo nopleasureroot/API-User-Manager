@@ -20,7 +20,7 @@ public class User {
     private String discordEmail;
 
     @Column(name = "discord_id")
-    private String discordId;
+    private Long discordId;
 
     @Column(name = "discord_username")
     private String discordUsername;
