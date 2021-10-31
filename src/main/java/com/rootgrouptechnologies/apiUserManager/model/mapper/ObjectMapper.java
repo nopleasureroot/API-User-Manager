@@ -1,7 +1,7 @@
 package com.rootgrouptechnologies.apiUserManager.model.mapper;
 
 import com.rootgrouptechnologies.apiUserManager.entity.*;
-import com.rootgrouptechnologies.apiUserManager.model.*;
+import com.rootgrouptechnologies.apiUserManager.model.DTO.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -15,12 +15,11 @@ public interface ObjectMapper {
     @Mapping(source = "licence", target = "licenceDTO", qualifiedByName = "toLicenceDTO")
     @Mapping(source = "user", target = "userDTO")
     @Mapping(source = "licenceType", target = "licenceTypeDTO", qualifiedByName = "toLicenceTypeDTO")
-    @Mapping(source = "payment", target = "paymentDTO", qualifiedByName = "toPaymentDTO")
-    ResultDTO toResultDTO(User user, Licence licence, LicenceType licenceType, Billing billing, Payment payment);
+    @Mapping(source = "payment", target = "paymentDTO")
+    ResultUserDTO toResultDTO(User user, Licence licence, LicenceType licenceType, Billing billing, Payment payment);
 
     UserDTO toUserDTO(User user);
 
-    @Named("toPaymentDTO")
     PaymentDTO toPaymentDTO(Payment payment);
 
     @Named("toLicenceTypeDTO")

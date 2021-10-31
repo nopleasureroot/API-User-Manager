@@ -1,11 +1,11 @@
-package com.rootgrouptechnologies.apiUserManager.model;
+package com.rootgrouptechnologies.apiUserManager.model.DTO;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class ResultDTO {
+public class ResultUserDTO {
     private final UserDTO userDTO;
     private final LicenceDTO licenceDTO;
     private final LicenceTypeDTO licenceTypeDTO;

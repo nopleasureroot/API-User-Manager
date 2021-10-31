@@ -1,4 +1,4 @@
-package com.rootgrouptechnologies.apiUserManager.model;
+package com.rootgrouptechnologies.apiUserManager.model.DTO;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

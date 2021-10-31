@@ -1,7 +1,7 @@
 package com.rootgrouptechnologies.apiUserManager.service;
 
 import com.rootgrouptechnologies.apiUserManager.entity.User;
-import com.rootgrouptechnologies.apiUserManager.model.UserDTO;
+import com.rootgrouptechnologies.apiUserManager.model.DTO.UserDTO;
 import com.rootgrouptechnologies.apiUserManager.model.mapper.ObjectMapper;
 import com.rootgrouptechnologies.apiUserManager.repository.BillingRepository;
 import com.rootgrouptechnologies.apiUserManager.repository.LicenceRepository;

@@ -1,7 +1,7 @@
 package com.rootgrouptechnologies.apiUserManager.service;
 
 import com.rootgrouptechnologies.apiUserManager.entity.Licence;
-import com.rootgrouptechnologies.apiUserManager.model.LicenceDTO;
+import com.rootgrouptechnologies.apiUserManager.model.DTO.LicenceDTO;
 import com.rootgrouptechnologies.apiUserManager.model.mapper.ObjectMapper;
 import com.rootgrouptechnologies.apiUserManager.repository.LicenceRepository;
 import lombok.RequiredArgsConstructor;

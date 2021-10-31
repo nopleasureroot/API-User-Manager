@@ -2,8 +2,8 @@ package com.rootgrouptechnologies.apiUserManager.service;
 
 import com.rootgrouptechnologies.apiUserManager.entity.Licence;
 import com.rootgrouptechnologies.apiUserManager.entity.LicenceType;
-import com.rootgrouptechnologies.apiUserManager.model.LicenceDTO;
-import com.rootgrouptechnologies.apiUserManager.model.LicenceTypeDTO;
+import com.rootgrouptechnologies.apiUserManager.model.DTO.LicenceDTO;
+import com.rootgrouptechnologies.apiUserManager.model.DTO.LicenceTypeDTO;
 import com.rootgrouptechnologies.apiUserManager.model.mapper.ObjectMapper;
 import com.rootgrouptechnologies.apiUserManager.repository.LicenceRepository;
 import com.rootgrouptechnologies.apiUserManager.repository.LicenceTypeRepository;
@@ -23,7 +23,6 @@ import java.util.Locale;
 public class LicenceService {
     private final LicenceRepository licenceRepository;
     private final LicenceTypeRepository licenceTypeRepository;
-    private final LicenceHelper licenceHelper = new LicenceHelper();
 
     public List<LicenceDTO> getLicences() {
         List<LicenceDTO> licenceDTOS = new LinkedList<>();
@@ -35,6 +34,18 @@ public class LicenceService {
         return licenceDTOS;
     }
 
+    public LicenceDTO createLicence(Licence licence) {
+        String formattedDate = LicenceHelper.getFormattedNowDate();
+        String licenceToken = LicenceHelper.generateLicenceToken(licenceRepository);
+        String renewalDate = licence.getRenewalDate();
+        Integer licenceTypeId = licence.getLicenceTypeId();
+
+        Licence newLicence = LicenceHelper.collectNewLicence(licenceToken, renewalDate, licenceTypeId, formattedDate);
+        licenceRepository.save(newLicence);
+
+        return ObjectMapper.INSTANCE.toLicenceDTO(newLicence);
+    }
+
     public LicenceTypeDTO changeLicenceType(Integer id, LicenceType licenceType) throws Exception {
         Licence licence = licenceRepository.findLicenceByUserId(id);
         LicenceType currentLicenceType = licenceTypeRepository.findLicenceTypeById(licence.getLicenceTypeId());
@@ -42,7 +53,7 @@ public class LicenceService {
         Integer newRenewal = licenceType.getRenewPrice();
         Integer oldRenewal = currentLicenceType.getRenewPrice();
 
-        if (licenceHelper.checkAmountPriceAndRole(newRenewal, oldRenewal, licenceType.getMajorRoleName(), licenceTypeRepository)) {
+        if (LicenceHelper.checkAmountPriceAndRole(newRenewal, oldRenewal, licenceType.getMajorRoleName(), licenceTypeRepository)) {
             LicenceType newLicenceType =
                     (licenceType.getMajorRoleName().equals("Customer") && newRenewal.equals(2500))
                     ? licenceTypeRepository.findFirstByRenewPrice(newRenewal)
@@ -59,18 +70,6 @@ public class LicenceService {
         return ObjectMapper.INSTANCE.toLicenceTypeDTO(currentLicenceType);
     }
 
-    public LicenceDTO createLicence(Licence licence) {
-        String formattedDate = licenceHelper.getFormattedNowDate();
-        String licenceToken = licenceHelper.generateLicenceToken(licenceRepository);
-        String renewalDate = licence.getRenewalDate();
-        Integer licenceTypeId = licence.getLicenceTypeId();
-
-        Licence newLicence = licenceHelper.collectNewLicence(licenceToken, renewalDate, licenceTypeId, formattedDate);
-        licenceRepository.save(newLicence);
-
-        return ObjectMapper.INSTANCE.toLicenceDTO(newLicence);
-    }
-
     public LicenceDTO deleteLicence(Integer id) {
         Licence entity = licenceRepository.findLicenceById(id);
 
@@ -80,8 +79,8 @@ public class LicenceService {
     }
 
 
-    static class LicenceHelper {
-        private boolean checkAmountPriceAndRole(Integer newRenewal, Integer oldRenewal, String roleName, LicenceTypeRepository licenceTypeRepository) throws Exception {
+    private final static class LicenceHelper {
+        private static boolean checkAmountPriceAndRole(Integer newRenewal, Integer oldRenewal, String roleName, LicenceTypeRepository licenceTypeRepository) throws Exception {
             if (newRenewal.equals(oldRenewal)) {
                 throw new Exception("The user has a payment equal to the entered one, enter the amount different from the current one");
             }
@@ -94,12 +93,12 @@ public class LicenceService {
             throw new Exception("Enter the amount based on existing licenses");
         }
 
-        private String getFormattedNowDate() {
+        private static String getFormattedNowDate() {
             return LocalDateTime.now()
                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
         }
 
-        private String generateLicenceToken(LicenceRepository licenceRepository) {
+        private static String generateLicenceToken(LicenceRepository licenceRepository) {
             RandomStringGenerator randomStringGenerator = new RandomStringGenerator
                     .Builder()
                     .withinRange('A', 'z')
@@ -113,7 +112,7 @@ public class LicenceService {
             return licenceToken;
         }
 
-        private Licence collectNewLicence(String licenceToken, String renewalDate, Integer licenceTypeId, String formattedDate) {
+        private static Licence collectNewLicence(String licenceToken, String renewalDate, Integer licenceTypeId, String formattedDate) {
             Licence licence = new Licence();
 
             licence.setCreationDate(formattedDate);
