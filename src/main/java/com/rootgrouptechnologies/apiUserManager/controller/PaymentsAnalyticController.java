@@ -1,7 +1,7 @@
 package com.rootgrouptechnologies.apiUserManager.controller;
 
 import com.rootgrouptechnologies.apiUserManager.model.PeriodTime;
-import com.rootgrouptechnologies.apiUserManager.service.PaymentsAnalyticService;
+import com.rootgrouptechnologies.apiUserManager.service.impl.PaymentsAnalyticServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/payments")
 public class PaymentsAnalyticController {
-    private final PaymentsAnalyticService paymentsAnalyticService;
+    private final PaymentsAnalyticServiceImpl paymentsAnalyticServiceImpl;
 
     @PostMapping("/")
-    public ResponseEntity<Object> getPaymentsForPeriodTime(@RequestBody PeriodTime periodTime) {
-        return new ResponseEntity<>(paymentsAnalyticService.getTotalIncomeForPeriodTime(periodTime), HttpStatus.OK);
+    public ResponseEntity<Object> getTotalIncomeForPeriodTime(@RequestBody PeriodTime periodTime) {
+        return new ResponseEntity<>(paymentsAnalyticServiceImpl.getTotalIncomeForPeriodTime(periodTime), HttpStatus.OK);
     }
 }

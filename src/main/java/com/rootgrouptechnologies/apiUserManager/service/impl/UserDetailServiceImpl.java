@@ -1,10 +1,11 @@
-package com.rootgrouptechnologies.apiUserManager.service;
+package com.rootgrouptechnologies.apiUserManager.service.impl;
 
 import com.rootgrouptechnologies.apiUserManager.entity.*;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.ResultUserDTO;
 import com.rootgrouptechnologies.apiUserManager.model.mapper.ObjectMapper;
 import com.rootgrouptechnologies.apiUserManager.repository.*;
 
+import com.rootgrouptechnologies.apiUserManager.service.UserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class UserDetailService {
+public class UserDetailServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final LicenceRepository licenceRepository;
@@ -20,6 +21,7 @@ public class UserDetailService {
     private final BillingRepository billingRepository;
     private final PaymentRepository paymentRepository;
 
+    @Override
     public List<ResultUserDTO> getUsersDetails() {
         List<ResultUserDTO> userDTOS = new LinkedList<>();
 

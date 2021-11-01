@@ -1,6 +1,6 @@
 package com.rootgrouptechnologies.apiUserManager.controller;
 
-import com.rootgrouptechnologies.apiUserManager.service.UserDetailService;
+import com.rootgrouptechnologies.apiUserManager.service.impl.UserDetailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserDetailController {
-    private final UserDetailService userDetailService;
+    private final UserDetailServiceImpl userDetailServiceImpl;
 
     @GetMapping("/details")
     public ResponseEntity<Object> getUserDetails() {
-        return new ResponseEntity<>(userDetailService.getUsersDetails(), HttpStatus.OK);
+        return new ResponseEntity<>(userDetailServiceImpl.getUsersDetails(), HttpStatus.OK);
     }
 }
