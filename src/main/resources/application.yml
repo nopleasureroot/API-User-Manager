@@ -2,12 +2,33 @@ server:
   port: 8082
   servlet:
     context-path: /api/v1
+springdoc:
+  swagger-ui:
+    path: /documentation
 spring:
   application:
     name: API-User-Manager
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
-springdoc:
-  swagger-ui:
-    path: /documentation
+  security:
+    oauth2:
+      client:
+        registration:
+          discord:
+            client-id: 904875487615152139
+            client-secret: XRn5edHCrv3QIKyplU2T8nDqbhmJOWcw
+            client-authentication-method: post
+            authorization-grant-type: authorization_code
+            scope:
+              - identify
+              - email
+            redirect-uri: "http://localhost:8082/api/v1/login/oauth2/code/discord"
+            client-name: :root
+        provider:
+          discord:
+            authorizationUri: https://discordapp.com/api/oauth2/authorize
+            tokenUri: https://discordapp.com/api/oauth2/token
+            userInfoUri: https://discordapp.com/api/users/@me
+            usernameAttribute: id
+
