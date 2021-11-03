@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 import java.util.Objects;
 
-@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{

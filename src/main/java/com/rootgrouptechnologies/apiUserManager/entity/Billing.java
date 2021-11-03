@@ -19,7 +19,7 @@ public class Billing {
     @Column(name = "card_date")
     private String cardDate;
 
-    @Column(name = "cart_number_ending")
+    @Column(name = "card_number_ending")
     private Integer cartNumberEnding;
 
     @Column(name = "payment_id")
