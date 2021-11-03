@@ -1,33 +1,40 @@
-package com.rootgrouptechnologies.apiUserManager.config;
+package com.rootgrouptechnologies.apiUserManager.security;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
+import com.rootgrouptechnologies.apiUserManager.security.service.OAuth2UserServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequestEntityConverter;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequestEntityConverter;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 import java.util.Objects;
 
+@Slf4j
 @Configuration
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+@EnableWebSecurity
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
+    private final OAuth2UserServiceImpl oAuth2UserService;
+
+    public SecurityConfiguration(OAuth2UserServiceImpl oAuth2UserService) {
+        this.oAuth2UserService = oAuth2UserService;
+    }
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/", "/login").permitAll()
+                .antMatchers("/login").permitAll()
                 .anyRequest().authenticated();
 
         http
@@ -35,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("http://localhost:8082/api/v1/users/details", true)
                 .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
                 .and()
-                .userInfoEndpoint().userService(userService());
+                .userInfoEndpoint().userService(oAuth2UserService);
 
         http
                 .csrf().disable()
@@ -55,24 +62,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         client.setRequestEntityConverter(new OAuth2AuthorizationCodeGrantRequestEntityConverter() {
             @Override
             public RequestEntity<?> convert(OAuth2AuthorizationCodeGrantRequest oauth2Request) {
-                return OAuth2UserAgentUtils.withUserAgent(Objects.requireNonNull(super.convert(oauth2Request)));
+                return SecurityHelper.withUserAgent(Objects.requireNonNull(super.convert(oauth2Request)));
             }
         });
 
         return client;
     }
 
-    @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> userService() {
-        DefaultOAuth2UserService service = new DefaultOAuth2UserService();
+    static class SecurityHelper {
+        private static final String DISCORD_BOT_USER_AGENT = "Root";
 
-        service.setRequestEntityConverter(new OAuth2UserRequestEntityConverter() {
-            @Override
-            public RequestEntity<?> convert(OAuth2UserRequest userRequest) {
-                return OAuth2UserAgentUtils.withUserAgent(Objects.requireNonNull(super.convert(userRequest)));
-            }
-        });
+        static RequestEntity<?> withUserAgent(RequestEntity<?> request) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.putAll(request.getHeaders());
+            headers.add(HttpHeaders.USER_AGENT, DISCORD_BOT_USER_AGENT);
 
-        return service;
+            return new RequestEntity<>(request.getBody(), headers, request.getMethod(), request.getUrl());
+        }
     }
+
 }

@@ -29,6 +29,10 @@ spring:
           discord:
             authorizationUri: https://discordapp.com/api/oauth2/authorize
             tokenUri: https://discordapp.com/api/oauth2/token
-            userInfoUri: https://discordapp.com/api/users/@me
+            userInfoUri: ${USER_INFO:https://discordapp.com/api/users/@me}
             usernameAttribute: id
+access:
+  accounts:
+    ${ACCOUNT_ONE:464890935067672576},
+    ${ACCOUNT_SECOND:692324662826237972}
 
