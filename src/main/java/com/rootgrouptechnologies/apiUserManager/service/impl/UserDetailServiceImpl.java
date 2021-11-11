@@ -42,7 +42,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         return userDTOS;
     }
 
-    private final static class DetailHelper {
+    static class DetailHelper {
         private static Payment getRecentUserPayment(Long discordId, Integer renewalPrice, PaymentRepository paymentRepository) {
             List<Payment> payments = paymentRepository.findAllByDiscordId(discordId);
 

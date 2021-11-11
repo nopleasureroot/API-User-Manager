@@ -84,7 +84,7 @@ public class LicenceServiceImpl implements LicenceService {
     }
 
 
-    private final static class LicenceHelper {
+    static class LicenceHelper {
         private static boolean checkAmountPriceAndRole(Integer newRenewal, Integer oldRenewal, String roleName, LicenceTypeRepository licenceTypeRepository) throws Exception {
             if (newRenewal.equals(oldRenewal)) {
                 throw new Exception("The user has a payment equal to the entered one, enter the amount different from the current one");
