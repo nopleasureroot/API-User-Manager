@@ -16,7 +16,7 @@ spring:
       client:
         registration:
           discord:
-            client-id: 904875487615152139
+            client-id: ${CLIENT-ID:904875487615152139}
             client-secret: XRn5edHCrv3QIKyplU2T8nDqbhmJOWcw
             client-authentication-method: post
             authorization-grant-type: authorization_code

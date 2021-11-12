@@ -17,6 +17,8 @@ public class UserDetailController {
 
     @GetMapping("/details")
     public ResponseEntity<Object> getUserDetails(Authentication authentication) {
+        int u = 0;
+
         if (authentication.isAuthenticated()) {
             return new ResponseEntity<>(userDetailServiceImpl.getUsersDetails(), HttpStatus.OK);
         }
