@@ -22,7 +22,6 @@ import java.util.Objects;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     private final OAuth2UserServiceImpl oAuth2UserService;
-
     private final OAuth2AccessTokenResponseClientImpl oAuth2AccessTokenResponseClient;
 
     public SecurityConfiguration(OAuth2UserServiceImpl oAuth2UserService, OAuth2AccessTokenResponseClientImpl oAuth2AccessTokenResponseClient) {
