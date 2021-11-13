@@ -1,7 +1,7 @@
 package com.rootgrouptechnologies.apiUserManager.security;
 
+import com.rootgrouptechnologies.apiUserManager.security.service.OAuth2AccessTokenResponseClientImpl;
 import com.rootgrouptechnologies.apiUserManager.security.service.OAuth2UserServiceImpl;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -23,8 +23,11 @@ import java.util.Objects;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     private final OAuth2UserServiceImpl oAuth2UserService;
 
-    public SecurityConfiguration(OAuth2UserServiceImpl oAuth2UserService) {
+    private final OAuth2AccessTokenResponseClientImpl oAuth2AccessTokenResponseClient;
+
+    public SecurityConfiguration(OAuth2UserServiceImpl oAuth2UserService, OAuth2AccessTokenResponseClientImpl oAuth2AccessTokenResponseClient) {
         this.oAuth2UserService = oAuth2UserService;
+        this.oAuth2AccessTokenResponseClient = oAuth2AccessTokenResponseClient;
     }
 
 
@@ -39,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
         http
                 .oauth2Login()
                 .defaultSuccessUrl("http://localhost:8082/api/v1/users/details", true)
-                .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
+                .tokenEndpoint().accessTokenResponseClient(oAuth2AccessTokenResponseClient)
                 .and()
                 .userInfoEndpoint().userService(oAuth2UserService);
 
@@ -53,31 +56,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .logoutSuccessUrl("http://localhost:8082/api/v1/login")
                 .deleteCookies("U_SESSION").permitAll();
     }
-
-    @Bean
-    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
-        DefaultAuthorizationCodeTokenResponseClient client = new DefaultAuthorizationCodeTokenResponseClient();
-
-        client.setRequestEntityConverter(new OAuth2AuthorizationCodeGrantRequestEntityConverter() {
-            @Override
-            public RequestEntity<?> convert(OAuth2AuthorizationCodeGrantRequest oauth2Request) {
-                return SecurityHelper.withUserAgent(Objects.requireNonNull(super.convert(oauth2Request)));
-            }
-        });
-
-        return client;
-    }
-
-    static class SecurityHelper {
-        private static final String DISCORD_BOT_USER_AGENT = "Root";
-
-        static RequestEntity<?> withUserAgent(RequestEntity<?> request) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.putAll(request.getHeaders());
-            headers.add(HttpHeaders.USER_AGENT, DISCORD_BOT_USER_AGENT);
-
-            return new RequestEntity<>(request.getBody(), headers, request.getMethod(), request.getUrl());
-        }
-    }
-
 }
