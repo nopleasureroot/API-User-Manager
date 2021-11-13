@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -16,13 +18,9 @@ public class UserDetailController {
     private final UserDetailServiceImpl userDetailServiceImpl;
 
     @GetMapping("/details")
-    public ResponseEntity<Object> getUserDetails(Authentication authentication) {
-        int u = 0;
+    public ResponseEntity<Object> getUserDetails(Principal principal) {
 
-        if (authentication.isAuthenticated()) {
-            return new ResponseEntity<>(userDetailServiceImpl.getUsersDetails(), HttpStatus.OK);
-        }
 
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(userDetailServiceImpl.getUsersDetails(), HttpStatus.OK);
     }
 }

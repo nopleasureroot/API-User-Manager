@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.security.Principal;
 import java.util.Base64;
 
 @Controller
@@ -37,7 +38,8 @@ public class UserProfileController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<OAuth2AccessTokenResponse> getAccessToken(@RequestBody OAuth2AuthorizationCodeGrantRequest oAuth2AuthorizationCodeGrantRequest) {
+    public ResponseEntity<OAuth2AccessTokenResponse> getAccessToken(Principal principal, OAuth2AuthorizationCodeGrantRequest oAuth2AuthorizationCodeGrantRequest){
+
         return new ResponseEntity<>(oAuth2AccessTokenResponseClient.getTokenResponse(oAuth2AuthorizationCodeGrantRequest), HttpStatus.OK);
     }
 }
