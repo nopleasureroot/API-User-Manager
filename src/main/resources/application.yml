@@ -16,7 +16,7 @@ spring:
       client:
         registration:
           discord:
-            client-id: ${CLIENT-ID:904875487615152139}
+            client-id: 904875487615152139
             client-secret: XRn5edHCrv3QIKyplU2T8nDqbhmJOWcw
             client-authentication-method: post
             authorization-grant-type: authorization_code
@@ -29,8 +29,10 @@ spring:
           discord:
             authorizationUri: https://discordapp.com/api/oauth2/authorize
             tokenUri: https://discordapp.com/api/oauth2/token
-            userInfoUri: ${USER_INFO:https://discordapp.com/api/users/@me}
+            userInfoUri: https://discordapp.com/api/users/@me
             usernameAttribute: id
 access:
-  accounts: ${ACCOUNT_ONE:464890935067672576}
+  accounts:
+    ${ACCOUNT_ONE:464890935067672576}
+    ${ACCOUNT_SECOND:692324662826237972}
 

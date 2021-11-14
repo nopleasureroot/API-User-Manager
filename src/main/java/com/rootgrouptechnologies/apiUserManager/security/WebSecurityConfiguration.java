@@ -2,6 +2,7 @@ package com.rootgrouptechnologies.apiUserManager.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +15,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequestEntityConverter;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -37,6 +39,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
                 .and()
                 .userInfoEndpoint().userService(userService());
+
+        http
+                .exceptionHandling()
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                .and()
+                .logout()
+                .invalidateHttpSession(true).clearAuthentication(true)
+                .logoutSuccessUrl("http://localhost:8080/user/")
+                .deleteCookies("U_SESSION").permitAll();
     }
 
     @Bean

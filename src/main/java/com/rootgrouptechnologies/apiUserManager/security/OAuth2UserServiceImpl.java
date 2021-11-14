@@ -1,5 +1,6 @@
 package com.rootgrouptechnologies.apiUserManager.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +30,9 @@ import java.util.Set;
 
 @Service
 public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+
+    @Value("${access.accounts}")
+    private String accessAccounts;
 
     private static final String MISSING_USER_INFO_URI_ERROR_CODE = "missing_user_info_uri";
 
@@ -73,13 +77,21 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
 
         ResponseEntity<Map<String, Object>> response = getResponse(userRequest, request);
         Map<String, Object> userAttributes = response.getBody();
-        Set<GrantedAuthority> authorities = new LinkedHashSet<>();
-        authorities.add(new OAuth2UserAuthority(userAttributes));
-        OAuth2AccessToken token = userRequest.getAccessToken();
-        for (String authority : token.getScopes()) {
-            authorities.add(new SimpleGrantedAuthority("SCOPE_" + authority));
+
+        assert userAttributes != null;
+
+        if (accessAccounts.contains(userAttributes.get("id").toString())) {
+            Set<GrantedAuthority> authorities = new LinkedHashSet<>();
+            authorities.add(new OAuth2UserAuthority(userAttributes));
+            OAuth2AccessToken token = userRequest.getAccessToken();
+            for (String authority : token.getScopes()) {
+                authorities.add(new SimpleGrantedAuthority("SCOPE_" + authority));
+            }
+            return new DefaultOAuth2User(authorities, userAttributes, userNameAttributeName);
+        } else {
+            OAuth2Error oAuth2Error = new OAuth2Error(INVALID_USER_INFO_RESPONSE_ERROR_CODE, "", null);
+            throw new OAuth2AuthenticationException(oAuth2Error, oAuth2Error.toString(), null);
         }
-        return new DefaultOAuth2User(authorities, userAttributes, userNameAttributeName);
     }
 
     private ResponseEntity<Map<String, Object>> getResponse(OAuth2UserRequest userRequest, RequestEntity<?> request) {
@@ -98,14 +110,14 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
             }
             errorDetails.append("]");
             oauth2Error = new OAuth2Error(INVALID_USER_INFO_RESPONSE_ERROR_CODE,
-                    "An error occurred while attempting to retrieve the UserInfo Resource: " + errorDetails.toString(),
+                    "An error occurred while attempting to retrieve the UserInfo Resource: " + errorDetails,
                     null);
             throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString(), ex);
         }
         catch (UnknownContentTypeException ex) {
             String errorMessage = "An error occurred while attempting to retrieve the UserInfo Resource from '"
                     + userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUri()
-                    + "': response contains invalid content type '" + ex.getContentType().toString() + "'. "
+                    + "': response contains invalid content type '" + ex.getContentType() + "'. "
                     + "The UserInfo Response should return a JSON object (content type 'application/json') "
                     + "that contains a collection of name and value pairs of the claims about the authenticated End-User. "
                     + "Please ensure the UserInfo Uri in UserInfoEndpoint for Client Registration '"
