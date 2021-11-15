@@ -35,7 +35,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
-                .defaultSuccessUrl("http://localhost:8080/user/", true)
+                .defaultSuccessUrl("http://localhost:8080/analytics/", true)
                 .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
                 .and()
                 .userInfoEndpoint().userService(userService());
@@ -46,7 +46,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .invalidateHttpSession(true).clearAuthentication(true)
-                .logoutSuccessUrl("http://localhost:8080/user/")
+                .logoutSuccessUrl("http://localhost:8080/")
                 .deleteCookies("U_SESSION").permitAll();
     }
 
