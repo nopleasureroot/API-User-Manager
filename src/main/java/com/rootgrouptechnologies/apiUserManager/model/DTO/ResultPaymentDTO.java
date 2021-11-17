@@ -3,6 +3,8 @@ package com.rootgrouptechnologies.apiUserManager.model.DTO;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @Data
 @RequiredArgsConstructor
 public class ResultPaymentDTO {
@@ -10,4 +12,5 @@ public class ResultPaymentDTO {
     private int qtyCanceledSub;
     private String startDate;
     private String endDate;
+    private List<OneDayIncomeDTO> incomeList;
 }

@@ -3,7 +3,6 @@ package com.rootgrouptechnologies.apiUserManager.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -76,6 +75,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
         RequestEntity<?> request = this.requestEntityConverter.convert(userRequest);
 
         ResponseEntity<Map<String, Object>> response = getResponse(userRequest, request);
+
         Map<String, Object> userAttributes = response.getBody();
 
         assert userAttributes != null;
@@ -162,5 +162,4 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
         Assert.notNull(restOperations, "restOperations cannot be null");
         this.restOperations = restOperations;
     }
-
 }

@@ -1,12 +1,10 @@
 package com.rootgrouptechnologies.apiUserManager.entity;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
-@NoArgsConstructor
 @Entity
 @Table(name = "licence_type" , schema = "public")
 public class LicenceType {
