@@ -32,17 +32,23 @@ public class PaymentsAnalyticServiceImpl implements PaymentsAnalyticService {
 
             Integer totalIncome = 0;
             int oneDayIncome = 0;
-            String date = "";
+            String date;
 
             for (int i = 0; i < succeededPayments.size(); i++) {
-                if (succeededPayments.get(i+1).getPaymentDate().equals(succeededPayments.get(i).getPaymentDate())) {
-                    oneDayIncome += succeededPayments.get(i).getAmount();
-                    date = succeededPayments.get(i).getPaymentDate();
+                boolean compareDates = (i != succeededPayments.size() - 1)
+                        ? succeededPayments.get(i+1).getPaymentDate().equals(succeededPayments.get(i).getPaymentDate())
+                        : succeededPayments.get(i-1).getPaymentDate().equals(succeededPayments.get(i).getPaymentDate());
+
+                date = succeededPayments.get(i).getPaymentDate();
+                oneDayIncome += succeededPayments.get(i).getAmount();
+
+                if (compareDates) {
+                    if (i == succeededPayments.size() - 1)
+                        oneDayIncomeDTOS.add(new OneDayIncomeDTO(oneDayIncome, date));
                 } else {
                     oneDayIncomeDTOS.add(new OneDayIncomeDTO(oneDayIncome, date));
 
-                    oneDayIncome = succeededPayments.get(i).getAmount();
-                    date = succeededPayments.get(i).getPaymentDate();
+                    oneDayIncome = 0;
                 }
 
                 totalIncome += succeededPayments.get(i).getAmount();
