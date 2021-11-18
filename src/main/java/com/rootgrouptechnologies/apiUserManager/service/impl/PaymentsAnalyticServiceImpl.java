@@ -31,10 +31,21 @@ public class PaymentsAnalyticServiceImpl implements PaymentsAnalyticService {
             List<OneDayIncomeDTO> oneDayIncomeDTOS = new LinkedList<>();
 
             Integer totalIncome = 0;
+            int oneDayIncome = 0;
+            String date = "";
 
-            for (Payment succeededPayment : succeededPayments) {
-                oneDayIncomeDTOS.add(new OneDayIncomeDTO(succeededPayment.getAmount(), succeededPayment.getPaymentDate()));
-                totalIncome += succeededPayment.getAmount();
+            for (int i = 0; i < succeededPayments.size(); i++) {
+                if (succeededPayments.get(i+1).getPaymentDate().equals(succeededPayments.get(i).getPaymentDate())) {
+                    oneDayIncome += succeededPayments.get(i).getAmount();
+                    date = succeededPayments.get(i).getPaymentDate();
+                } else {
+                    oneDayIncomeDTOS.add(new OneDayIncomeDTO(oneDayIncome, date));
+
+                    oneDayIncome = succeededPayments.get(i).getAmount();
+                    date = succeededPayments.get(i).getPaymentDate();
+                }
+
+                totalIncome += succeededPayments.get(i).getAmount();
             }
 
             resultPaymentDTO.setIncomeList(oneDayIncomeDTOS);
