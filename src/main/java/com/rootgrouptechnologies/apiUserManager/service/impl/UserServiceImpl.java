@@ -8,6 +8,7 @@ import com.rootgrouptechnologies.apiUserManager.repository.LicenceRepository;
 import com.rootgrouptechnologies.apiUserManager.repository.UserRepository;
 import com.rootgrouptechnologies.apiUserManager.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class UserServiceImpl implements UserService {
+    private final DiscordServiceImpl discordService;
+
     private final UserRepository userRepository;
     private final LicenceRepository licenceRepository;
     private final BillingRepository billingRepository;
@@ -27,6 +30,8 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
         licenceRepository.deleteByUserId(id);
         billingRepository.deleteByUserId(id);
+
+//        discordService.kickUserFromGuild(entity.getDiscordId().toString());
 
         return ObjectMapper.INSTANCE.toUserDTO(entity);
     }
