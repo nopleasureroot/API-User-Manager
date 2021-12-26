@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
         licenceRepository.deleteByUserId(id);
         billingRepository.deleteByUserId(id);
 
-//        discordService.kickUserFromGuild(entity.getDiscordId().toString());
+        discordService.kickUserFromGuild(entity.getDiscordId().toString());
 
         return ObjectMapper.INSTANCE.toUserDTO(entity);
     }

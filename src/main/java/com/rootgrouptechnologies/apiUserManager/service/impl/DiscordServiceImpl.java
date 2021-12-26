@@ -16,9 +16,6 @@ import java.util.Collections;
 @Service
 @RequiredArgsConstructor
 public class DiscordServiceImpl {
-    @Autowired
-    private OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
-
     @Value("${discord.bot.token}")
     private String discordBotToken;
 
