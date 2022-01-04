@@ -1,6 +1,6 @@
 package com.rootgrouptechnologies.apiUserManager.controller;
 
-import com.rootgrouptechnologies.apiUserManager.model.PeriodTime;
+import com.rootgrouptechnologies.apiUserManager.model.request.PeriodTimeRequest;
 import com.rootgrouptechnologies.apiUserManager.service.impl.MemberAnalyticServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ public class MembersAnalyticController {
     private final MemberAnalyticServiceImpl memberAnalyticService;
 
     @PostMapping("/retention")
-    public ResponseEntity<Object> getDepartedUsers(@RequestBody PeriodTime periodTime) {
-        return new ResponseEntity<>(memberAnalyticService.getQuantityDepartedUsers(periodTime), HttpStatus.OK);
+    public ResponseEntity<Object> getDepartedUsers(@RequestBody PeriodTimeRequest periodTimeRequest) {
+        return new ResponseEntity<>(memberAnalyticService.getQuantityDepartedUsers(periodTimeRequest), HttpStatus.OK);
     }
 }

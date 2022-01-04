@@ -1,5 +1,8 @@
 package com.rootgrouptechnologies.apiUserManager.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -24,6 +27,8 @@ public class Payment {
     @Column(name = "discord_id")
     private Long discordId;
 
+    @JsonFormat(pattern = "YYYY-MM-dd")
+    @JsonSerialize(using = DateSerializer.class)
     @Column(name = "payment_date")
     private String paymentDate;
 

@@ -9,4 +9,5 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
     List<Payment> findAllByDiscordId(Long discordId);
 
     List<Payment> findByPaymentDateBetweenAndPaymentState(String startDate, String endDate, String paymentState);
+    List<Payment> findPaymentsByPaymentDateGreaterThanEqualAndPaymentDateLessThan(String startDate, String endDate);
 }

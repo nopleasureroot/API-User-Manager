@@ -1,20 +1,28 @@
 package com.rootgrouptechnologies.apiUserManager.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import com.rootgrouptechnologies.apiUserManager.model.request.DropRequest;
+import com.rootgrouptechnologies.apiUserManager.service.impl.DropServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/drop")
 public class DropController {
-
+    private final DropServiceImpl dropService;
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createDrop() {
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Object> createDrop(@RequestBody DropRequest dropRequest) throws Exception {
+        return new ResponseEntity<>(dropService.createDrop(dropRequest) ,HttpStatus.OK);
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<Object> checkInventory(@RequestParam String password) {
+        return new ResponseEntity<>(dropService.checkInventory(password), HttpStatus.OK);
     }
 }

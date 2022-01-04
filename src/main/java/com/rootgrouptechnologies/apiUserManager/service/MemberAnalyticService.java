@@ -1,12 +1,10 @@
 package com.rootgrouptechnologies.apiUserManager.service;
 
 import com.rootgrouptechnologies.apiUserManager.model.DTO.DepartedUserDTO;
-import com.rootgrouptechnologies.apiUserManager.model.PeriodTime;
-
-import java.util.List;
+import com.rootgrouptechnologies.apiUserManager.model.request.PeriodTimeRequest;
 
 public interface MemberAnalyticService {
     void collectAndRecordMetrics();
 
-    DepartedUserDTO getQuantityDepartedUsers(PeriodTime periodTime);
+    DepartedUserDTO getQuantityDepartedUsers(PeriodTimeRequest periodTimeRequest);
 }

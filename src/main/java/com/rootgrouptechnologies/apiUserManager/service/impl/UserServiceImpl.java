@@ -8,7 +8,6 @@ import com.rootgrouptechnologies.apiUserManager.repository.LicenceRepository;
 import com.rootgrouptechnologies.apiUserManager.repository.UserRepository;
 import com.rootgrouptechnologies.apiUserManager.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

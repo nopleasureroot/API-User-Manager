@@ -2,7 +2,7 @@ package com.rootgrouptechnologies.apiUserManager.service.impl;
 
 import com.rootgrouptechnologies.apiUserManager.entity.Metric;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.DepartedUserDTO;
-import com.rootgrouptechnologies.apiUserManager.model.PeriodTime;
+import com.rootgrouptechnologies.apiUserManager.model.request.PeriodTimeRequest;
 import com.rootgrouptechnologies.apiUserManager.repository.MetricRepository;
 import com.rootgrouptechnologies.apiUserManager.repository.UserRepository;
 import com.rootgrouptechnologies.apiUserManager.service.MemberAnalyticService;
@@ -37,9 +37,9 @@ public class MemberAnalyticServiceImpl implements MemberAnalyticService {
     }
 
     @Override
-    public DepartedUserDTO getQuantityDepartedUsers(PeriodTime periodTime) {
+    public DepartedUserDTO getQuantityDepartedUsers(PeriodTimeRequest periodTimeRequest) {
         DepartedUserDTO departedUserDTO = new DepartedUserDTO();
-        List<Metric> metrics = metricRepository.findMetricsByDateBetween(periodTime.getStartDate(), periodTime.getEndDate());
+        List<Metric> metrics = metricRepository.findMetricsByDateBetween(periodTimeRequest.getStartDate(), periodTimeRequest.getEndDate());
 
         Metric startMetric = metrics.get(0);
         Metric endMetric = metrics.get(metrics.size() - 1);
@@ -51,7 +51,7 @@ public class MemberAnalyticServiceImpl implements MemberAnalyticService {
         if (incomeUsers <= 0) incomeUsers = 0;
 
         departedUserDTO.setQuantityDepartedUsers(departedUsers);
-        departedUserDTO.setPeriodTime(periodTime);
+        departedUserDTO.setPeriodTimeRequest(periodTimeRequest);
         departedUserDTO.setRetentionPercentage(calculateRetentionPercentage(startMetric.getQuantity(), endMetric.getQuantity()));
         departedUserDTO.setQuantityIncomeUsers(incomeUsers);
 
