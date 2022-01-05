@@ -12,4 +12,5 @@ public class CheckInventoryResponse {
     private final List<?> payments;
     private final Integer canceledPayments;
     private final String message;
+    private final Boolean status;
 }

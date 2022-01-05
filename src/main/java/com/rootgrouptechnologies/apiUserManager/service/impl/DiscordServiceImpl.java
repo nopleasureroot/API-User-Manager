@@ -1,7 +1,7 @@
 package com.rootgrouptechnologies.apiUserManager.service.impl;
 
+import com.rootgrouptechnologies.apiUserManager.service.DiscordService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,13 +14,14 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-public class DiscordServiceImpl {
+public class DiscordServiceImpl implements DiscordService {
     @Value("${discord.bot.token}")
     private String discordBotToken;
 
     @Value("${discord.guild.id}")
     private String discordGuildId;
 
+    @Override
     public void kickUserFromGuild(String discordId) {
         RestTemplate restTemplate = new RestTemplate();
 

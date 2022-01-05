@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Service
 @EnableScheduling
 @RequiredArgsConstructor
-@Service
 public class MemberAnalyticServiceImpl implements MemberAnalyticService {
     private final UserRepository userRepository;
     private final MetricRepository metricRepository;

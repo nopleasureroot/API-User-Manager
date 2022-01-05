@@ -15,14 +15,17 @@ import com.rootgrouptechnologies.apiUserManager.repository.LicenceTypeRepository
 import com.rootgrouptechnologies.apiUserManager.repository.PaymentRepository;
 import com.rootgrouptechnologies.apiUserManager.service.DropService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Service
+@EnableScheduling
 @RequiredArgsConstructor
 public class DropServiceImpl implements DropService {
     private final InventoryRepository inventoryRepository;
@@ -30,19 +33,8 @@ public class DropServiceImpl implements DropService {
     private final LicenceRepository licenceRepository;
     private final PaymentRepository paymentRepository;
 
-    private boolean deleteAfterSoldOut;
-    private int initialQty;
-    private boolean autoRestockSlots;
-    private boolean mustBind;
-    private LocalDate creationDate;
-
-    private void initDropParams(DropRequest dropRequest) {
-        initialQty = dropRequest.getQuantity();
-        deleteAfterSoldOut = dropRequest.getDeleteAfterSoldOut();
-        autoRestockSlots = dropRequest.getAutoRestock();
-        mustBind = dropRequest.getMustBind();
-        creationDate = dropRequest.getCreationDate();
-    }
+    private String infoMessage = "";
+    private Boolean dropIsActive;
 
     @Override
     @Transactional
@@ -51,15 +43,28 @@ public class DropServiceImpl implements DropService {
                 && inventoryRepository.findInventoryByPasswordAndQuantityAndLicenceTypeId(dropRequest.getPassword(), dropRequest.getQuantity(), dropRequest.getLicenceType().getId()) == null
                 && dropRequest.getPassword() != null && !dropRequest.getPassword().isEmpty()
                 && dropRequest.getQuantity() >= 1) {
-            initDropParams(dropRequest);
+            dropIsActive = true;
 
             Inventory inventory = new Inventory();
 
             inventory.setPassword(dropRequest.getPassword());
             inventory.setQuantity(dropRequest.getQuantity());
             inventory.setLicenceTypeId(dropRequest.getLicenceType().getId());
+            inventory.setCreationDate(dropRequest.getCreationDate());
+            inventory.setAutoRestock(dropRequest.getAutoRestock());
+            inventory.setDeleteAfterDrop(dropRequest.getDeleteAfterSoldOut());
+            inventory.setIsActive(true);
+            inventory.setInitialQty(dropRequest.getQuantity());
 
             inventoryRepository.save(inventory);
+
+            CompletableFuture.runAsync(() -> {
+                try {
+                    scheduledCheckInventory(dropRequest.getPassword());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
 
             return new DropDTO(dropRequest.getQuantity(), dropRequest.getPassword(), licenceTypeRepository.findLicenceTypeById(dropRequest.getLicenceType().getId()));
         }
@@ -69,65 +74,87 @@ public class DropServiceImpl implements DropService {
 
     @Override
     @Transactional
-    public CheckInventoryResponse checkInventory(String password) {
-        Inventory inventory = inventoryRepository.findInventoryByPassword(password);
+    public void scheduledCheckInventory(String password) throws InterruptedException {
+        while (dropIsActive) {
+            TimeUnit.MILLISECONDS.sleep(500);
 
-        List<Payment> payments = paymentRepository.findPaymentsByPaymentDateGreaterThanEqualAndPaymentDateLessThan(creationDate.toString(), creationDate.plusDays(1).toString());
-        List<Licence> licences = licenceRepository.findLicencesByCreationDateGreaterThanEqualAndCreationDateLessThan(creationDate.toString(), creationDate.plusDays(1).toString());
+            Inventory inventory = inventoryRepository.findInventoryByPassword(password);
+            List<Licence> licences = licenceRepository.findLicencesByCreationDateGreaterThanEqualAndCreationDateLessThan(inventory.getCreationDate().toString(), inventory.getCreationDate().plusDays(1).toString());
 
-        Integer canceledPayments = calculateCanceledPayments(inventory, licences);
+            Integer canceledPayments = DropHelper.calculateCanceledPayments(inventory, licences);
 
-        if (canceledPayments > 0 && autoRestockSlots && inventory.getQuantity() != 0) {
-            inventory.setQuantity(inventory.getQuantity() + canceledPayments);
-            inventoryRepository.save(inventory);
+            if (canceledPayments > 0 && inventory.getAutoRestock() && inventory.getQuantity() != 0) {
+                inventory.setQuantity(inventory.getQuantity() + canceledPayments);
+                inventoryRepository.save(inventory);
 
-            return new CheckInventoryResponse(convertToDTO(licences), convertToDTO(payments), canceledPayments, "Restocking was carried out for " + canceledPayments + " keys");
-        }
+                infoMessage = "Restocking was carried out for " + canceledPayments + " keys";
+            }
 
-        if (inventory.getQuantity() <= 0 && deleteAfterSoldOut) {
-            inventoryRepository.delete(inventory);
+            if (inventory.getQuantity() <= 0 && inventory.getDeleteAfterDrop()) {
+                inventory.setIsActive(false);
+                inventoryRepository.save(inventory);
 
-            return new CheckInventoryResponse(convertToDTO(licences), convertToDTO(payments), canceledPayments,"The keys were sold out successfully and the drop was deleted");
-        }
+                dropIsActive = false;
 
-        return new CheckInventoryResponse(convertToDTO(licences), convertToDTO(payments), canceledPayments,"Processing...");
-    }
-
-    private List<?> convertToDTO(List<?> objects) {
-        List<LicenceDTO> licenceDTOS = new LinkedList<>();
-        List<PaymentDTO> paymentDTOS = new LinkedList<>();
-
-        for (Object object : objects) {
-            if (object instanceof Licence) {
-                assert licenceDTOS != null;
-                licenceDTOS.add(ObjectMapper.INSTANCE.toLicenceDTO((Licence) object));
-
-                paymentDTOS = null;
-            } else if (object instanceof Payment) {
-                assert paymentDTOS != null;
-                paymentDTOS.add(ObjectMapper.INSTANCE.toPaymentDTO((Payment) object));
-
-                licenceDTOS = null;
+                infoMessage = "The keys were sold out successfully and the drop was deleted";
+                return;
             }
         }
-
-        return (licenceDTOS != null) ?
-                licenceDTOS :
-                paymentDTOS;
     }
 
-    private Integer calculateCanceledPayments(Inventory inventory, List<Licence> licences) {
-        int canceledPayments = 0;
+    @Override
+    @Transactional
+    public CheckInventoryResponse checkInventory(String password) {
+        String message = infoMessage;
+        if (message.contains("deleted")) infoMessage = "";
 
-        int quantityPaidLicences = licences.size();
-        int quantityKeys = inventory.getQuantity();
+        Inventory inventory = inventoryRepository.findInventoryByPassword(password);
 
-        int differenceWithInitialQty = initialQty - quantityPaidLicences;
+        List<Payment> payments = paymentRepository.findPaymentsByPaymentDateGreaterThanEqualAndPaymentDateLessThan(inventory.getCreationDate().toString(), inventory.getCreationDate().plusDays(1).toString());
+        List<Licence> licences = licenceRepository.findLicencesByCreationDateGreaterThanEqualAndCreationDateLessThan(inventory.getCreationDate().toString(), inventory.getCreationDate().plusDays(1).toString());
 
-        if (quantityKeys != differenceWithInitialQty) {
-            canceledPayments = Math.max(differenceWithInitialQty - quantityKeys, 0);
+        Integer canceledPayments = DropHelper.calculateCanceledPayments(inventory, licences);
+
+        return new CheckInventoryResponse(DropHelper.convertToDTO(licences), DropHelper.convertToDTO(payments), canceledPayments, message, inventory.getIsActive());
+    }
+
+    static class DropHelper {
+        static private List<?> convertToDTO(List<?> objects) {
+            List<LicenceDTO> licenceDTOS = new LinkedList<>();
+            List<PaymentDTO> paymentDTOS = new LinkedList<>();
+
+            for (Object object : objects) {
+                if (object instanceof Licence) {
+                    assert licenceDTOS != null;
+                    licenceDTOS.add(ObjectMapper.INSTANCE.toLicenceDTO((Licence) object));
+
+                    paymentDTOS = null;
+                } else if (object instanceof Payment) {
+                    assert paymentDTOS != null;
+                    paymentDTOS.add(ObjectMapper.INSTANCE.toPaymentDTO((Payment) object));
+
+                    licenceDTOS = null;
+                }
+            }
+
+            return (licenceDTOS != null) ?
+                    licenceDTOS :
+                    paymentDTOS;
         }
 
-        return canceledPayments;
+        static private Integer calculateCanceledPayments(Inventory inventory, List<Licence> licences) {
+            int canceledPayments = 0;
+
+            int quantityPaidLicences = licences.size();
+            int quantityKeys = inventory.getQuantity();
+
+            int differenceWithInitialQty = inventory.getInitialQty() - quantityPaidLicences;
+
+            if (quantityKeys != differenceWithInitialQty) {
+                canceledPayments = Math.max(differenceWithInitialQty - quantityKeys, 0);
+            }
+
+            return canceledPayments;
+        }
     }
 }
