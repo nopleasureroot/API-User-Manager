@@ -73,6 +73,19 @@ public class DropServiceImpl implements DropService {
     }
 
     @Override
+    public DropDTO deleteDrop(String password) throws Exception {
+        Inventory inventory = inventoryRepository.findInventoryByPassword(password);
+
+        if (inventory != null) {
+            inventoryRepository.delete(inventory);
+
+            return new DropDTO(inventory.getQuantity(), inventory.getPassword(), licenceTypeRepository.findLicenceTypeById(inventory.getLicenceTypeId()));
+        }
+
+        throw new Exception("Some error occur delete drop");
+    }
+
+    @Override
     @Transactional
     public void scheduledCheckInventory(String password) throws InterruptedException {
         while (dropIsActive) {

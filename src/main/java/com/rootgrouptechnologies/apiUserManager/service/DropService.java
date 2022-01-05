@@ -10,4 +10,6 @@ public interface DropService {
     CheckInventoryResponse checkInventory(String password);
 
     void scheduledCheckInventory(String password) throws InterruptedException;
+
+    DropDTO deleteDrop(String password) throws Exception;
 }
