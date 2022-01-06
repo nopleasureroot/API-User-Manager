@@ -73,16 +73,42 @@ public class PaymentsAnalyticServiceImpl implements PaymentsAnalyticService {
             resultPaymentDTO.setTotalIncome(totalIncome);
             resultPaymentDTO.setStartDate(periodTimeRequest.getStartDate());
             resultPaymentDTO.setEndDate(periodTimeRequest.getEndDate());
-            resultPaymentDTO.setCanceledPaymentDTOS(processCanceledPayments(canceledPayments));
+
+            List<CanceledPaymentDTO> firstProcessedCanceledPayments = firstProcessCanceledPayments(canceledPayments);
+
+            resultPaymentDTO.setCanceledPaymentDTOS(secondProcessCanceledPayments(firstProcessedCanceledPayments));
 
             return resultPaymentDTO;
         }
 
-        static List<CanceledPaymentDTO> processCanceledPayments(List<Payment> canceledPayments) {
+        static List<CanceledPaymentDTO> firstProcessCanceledPayments(List<Payment> canceledPayments) {
             List<CanceledPaymentDTO> canceledPaymentDTOS = new LinkedList<>();
 
             for (Payment canceledPayment : canceledPayments) {
-                canceledPaymentDTOS.add(new CanceledPaymentDTO(canceledPayment.getAmount(), canceledPayment.getPaymentDate()));
+                canceledPaymentDTOS.add(new CanceledPaymentDTO(0, canceledPayment.getPaymentDate()));
+            }
+
+            return canceledPaymentDTOS;
+        }
+
+        static List<CanceledPaymentDTO> secondProcessCanceledPayments(List<CanceledPaymentDTO> canceledPayments) {
+            List<CanceledPaymentDTO> canceledPaymentDTOS = new LinkedList<>();
+
+            int indexCurrentDTO = 0;
+            for (int i = 0; i < canceledPayments.size(); i++) {
+                if (i == 0) {
+                    canceledPaymentDTOS.add(new CanceledPaymentDTO(1, canceledPayments.get(0).getDate()));
+                } else {
+                    if (canceledPayments.get(i).getDate().equals(canceledPayments.get(i-1).getDate())) {
+                        int currentQty = canceledPaymentDTOS.get(indexCurrentDTO).getQty();
+
+                        canceledPaymentDTOS.get(indexCurrentDTO).setQty(currentQty + 1);
+                    } else {
+                        canceledPaymentDTOS.add(new CanceledPaymentDTO(1, canceledPayments.get(i).getDate()));
+
+                        indexCurrentDTO += 1;
+                    }
+                }
             }
 
             return canceledPaymentDTOS;
