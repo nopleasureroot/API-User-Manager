@@ -9,7 +9,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ResultPaymentDTO {
     private Integer totalIncome;
-    private int qtyCanceledSub;
+    private List<CanceledPaymentDTO> canceledPaymentDTOS;
     private String startDate;
     private String endDate;
     private List<OneDayIncomeDTO> incomeList;

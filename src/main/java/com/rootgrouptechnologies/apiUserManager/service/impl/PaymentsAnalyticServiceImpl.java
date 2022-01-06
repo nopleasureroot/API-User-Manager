@@ -1,6 +1,7 @@
 package com.rootgrouptechnologies.apiUserManager.service.impl;
 
 import com.rootgrouptechnologies.apiUserManager.entity.Payment;
+import com.rootgrouptechnologies.apiUserManager.model.DTO.CanceledPaymentDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.OneDayIncomeDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.ResultPaymentDTO;
 import com.rootgrouptechnologies.apiUserManager.model.request.PeriodTimeRequest;
@@ -72,9 +73,19 @@ public class PaymentsAnalyticServiceImpl implements PaymentsAnalyticService {
             resultPaymentDTO.setTotalIncome(totalIncome);
             resultPaymentDTO.setStartDate(periodTimeRequest.getStartDate());
             resultPaymentDTO.setEndDate(periodTimeRequest.getEndDate());
-            resultPaymentDTO.setQtyCanceledSub(canceledPayments.size());
+            resultPaymentDTO.setCanceledPaymentDTOS(processCanceledPayments(canceledPayments));
 
             return resultPaymentDTO;
+        }
+
+        static List<CanceledPaymentDTO> processCanceledPayments(List<Payment> canceledPayments) {
+            List<CanceledPaymentDTO> canceledPaymentDTOS = new LinkedList<>();
+
+            for (Payment canceledPayment : canceledPayments) {
+                canceledPaymentDTOS.add(new CanceledPaymentDTO(canceledPayment.getAmount(), canceledPayment.getPaymentDate()));
+            }
+
+            return canceledPaymentDTOS;
         }
     }
 }
