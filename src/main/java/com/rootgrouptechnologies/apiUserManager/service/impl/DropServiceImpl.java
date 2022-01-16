@@ -37,8 +37,8 @@ public class DropServiceImpl implements DropService {
     private Boolean dropIsActive;
 
     @Override
-    public List<Inventory> getAllDrops() {
-        return inventoryRepository.findAll();
+    public List<?> getAllDrops() {
+        return DropHelper.convertToDTO(inventoryRepository.findAll());
     }
 
     @Override
@@ -71,7 +71,7 @@ public class DropServiceImpl implements DropService {
                 }
             });
 
-            return new DropDTO(dropRequest.getQuantity(), dropRequest.getPassword(), licenceTypeRepository.findLicenceTypeById(dropRequest.getLicenceType().getId()));
+            return new DropDTO(dropRequest.getQuantity(), dropRequest.getPassword(), inventory.getIsActive(), inventory.getCreationDate());
         }
 
         throw new Exception("Request body must be valid");
@@ -84,7 +84,7 @@ public class DropServiceImpl implements DropService {
         if (inventory != null) {
             inventoryRepository.delete(inventory);
 
-            return new DropDTO(inventory.getQuantity(), inventory.getPassword(), licenceTypeRepository.findLicenceTypeById(inventory.getLicenceTypeId()));
+            return new DropDTO(inventory.getQuantity(), inventory.getPassword(), inventory.getIsActive(), inventory.getCreationDate());
         }
 
         throw new Exception("Some error occur delete drop");
@@ -138,6 +138,7 @@ public class DropServiceImpl implements DropService {
 
     static class DropHelper {
         static private List<?> convertToDTO(List<?> objects) {
+            List<DropDTO> dropDTOS = new LinkedList<>();
             List<LicenceDTO> licenceDTOS = new LinkedList<>();
             List<PaymentDTO> paymentDTOS = new LinkedList<>();
 
@@ -147,17 +148,26 @@ public class DropServiceImpl implements DropService {
                     licenceDTOS.add(ObjectMapper.INSTANCE.toLicenceDTO((Licence) object));
 
                     paymentDTOS = null;
+                    dropDTOS = null;
                 } else if (object instanceof Payment) {
                     assert paymentDTOS != null;
                     paymentDTOS.add(ObjectMapper.INSTANCE.toPaymentDTO((Payment) object));
 
                     licenceDTOS = null;
+                    dropDTOS = null;
+                } else if (object instanceof Inventory){
+                    assert dropDTOS != null;
+                    dropDTOS.add(ObjectMapper.INSTANCE.toDropDTO((Inventory) object));
+
+                    licenceDTOS = null;
+                    paymentDTOS = null;
                 }
             }
 
-            return (licenceDTOS != null) ?
-                    licenceDTOS :
-                    paymentDTOS;
+            if (licenceDTOS != null) return licenceDTOS;
+            if (paymentDTOS != null) return paymentDTOS;
+
+            return dropDTOS;
         }
 
         static private Integer calculateCanceledPayments(Inventory inventory, List<Licence> licences) {

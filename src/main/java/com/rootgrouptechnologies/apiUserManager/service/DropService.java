@@ -16,5 +16,5 @@ public interface DropService {
 
     DropDTO deleteDrop(String password) throws Exception;
 
-    List<Inventory> getAllDrops();
+    List<?> getAllDrops();
 }

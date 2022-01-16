@@ -10,7 +10,7 @@ spring:
     name: API-User-Manager
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
+    username: dmitrij
   security:
     oauth2:
       client:

@@ -1,23 +1,26 @@
 package com.rootgrouptechnologies.apiUserManager.model.mapper;
 
 import com.rootgrouptechnologies.apiUserManager.entity.Billing;
+import com.rootgrouptechnologies.apiUserManager.entity.Inventory;
 import com.rootgrouptechnologies.apiUserManager.entity.Licence;
 import com.rootgrouptechnologies.apiUserManager.entity.LicenceType;
 import com.rootgrouptechnologies.apiUserManager.entity.Payment;
 import com.rootgrouptechnologies.apiUserManager.entity.User;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.BillingDTO;
+import com.rootgrouptechnologies.apiUserManager.model.DTO.DropDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.LicenceDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.LicenceTypeDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.PaymentDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.ResultUserDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.UserDTO;
+import java.time.LocalDate;
 import javax.annotation.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-01-07T00:17:54+0300",
-    comments = "version: 1.5.0.Beta1, compiler: javac, environment: Java 11.0.12 (BellSoft)"
+    date = "2022-01-16T14:53:54+0300",
+    comments = "version: 1.5.0.Beta1, compiler: javac, environment: Java 15.0.2 (Oracle Corporation)"
 )
 @Component
 public class ObjectMapperImpl implements ObjectMapper {
@@ -88,6 +91,27 @@ public class ObjectMapperImpl implements ObjectMapper {
         PaymentDTO paymentDTO = new PaymentDTO( amount, comment, paymentState, paymentDate );
 
         return paymentDTO;
+    }
+
+    @Override
+    public DropDTO toDropDTO(Inventory inventory) {
+        if ( inventory == null ) {
+            return null;
+        }
+
+        String password = null;
+        Integer quantity = null;
+        Boolean isActive = null;
+        LocalDate creationDate = null;
+
+        password = inventory.getPassword();
+        quantity = inventory.getQuantity();
+        isActive = inventory.getIsActive();
+        creationDate = inventory.getCreationDate();
+
+        DropDTO dropDTO = new DropDTO( quantity, password, isActive, creationDate );
+
+        return dropDTO;
     }
 
     @Override
