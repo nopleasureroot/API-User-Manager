@@ -16,14 +16,19 @@ import org.springframework.web.bind.annotation.*;
 public class DropController {
     private final DropServiceImpl dropService;
 
-    @PostMapping("/")
+    @PostMapping("/create")
     public ResponseEntity<Object> createDrop(@RequestBody DropRequest dropRequest) throws Exception {
         return new ResponseEntity<>(dropService.createDrop(dropRequest) ,HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @PostMapping("/check")
     public ResponseEntity<Object> checkInventory(@RequestBody DropRequest dropRequest) {
         return new ResponseEntity<>(dropService.checkInventory(dropRequest), HttpStatus.OK);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<Object> getAllDrops() {
+        return new ResponseEntity<>(dropService.getAllDrops(), HttpStatus.OK);
     }
 
     @DeleteMapping("/")

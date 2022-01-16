@@ -37,6 +37,11 @@ public class DropServiceImpl implements DropService {
     private Boolean dropIsActive;
 
     @Override
+    public List<Inventory> getAllDrops() {
+        return inventoryRepository.findAll();
+    }
+
+    @Override
     @Transactional
     public DropDTO createDrop(DropRequest dropRequest) throws Exception {
         if (licenceTypeRepository.findLicenceTypeById(dropRequest.getLicenceType().getId()) != null
