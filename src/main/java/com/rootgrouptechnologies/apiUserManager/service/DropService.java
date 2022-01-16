@@ -7,7 +7,7 @@ import com.rootgrouptechnologies.apiUserManager.model.response.CheckInventoryRes
 public interface DropService {
     DropDTO createDrop(DropRequest dropRequest) throws Exception;
 
-    CheckInventoryResponse checkInventory(String password);
+    CheckInventoryResponse checkInventory(DropRequest dropRequest);
 
     void scheduledCheckInventory(String password) throws InterruptedException;
 

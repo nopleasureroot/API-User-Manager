@@ -117,11 +117,11 @@ public class DropServiceImpl implements DropService {
 
     @Override
     @Transactional
-    public CheckInventoryResponse checkInventory(String password) {
+    public CheckInventoryResponse checkInventory(DropRequest dropRequest) {
         String message = infoMessage;
         if (message.contains("deleted")) infoMessage = "";
 
-        Inventory inventory = inventoryRepository.findInventoryByPassword(password);
+        Inventory inventory = inventoryRepository.findInventoryByPasswordAndCreationDate(dropRequest.getPassword(), dropRequest.getCreationDate());
 
         List<Payment> payments = paymentRepository.findPaymentsByPaymentDateGreaterThanEqualAndPaymentDateLessThan(inventory.getCreationDate().toString(), inventory.getCreationDate().plusDays(1).toString());
         List<Licence> licences = licenceRepository.findLicencesByCreationDateGreaterThanEqualAndCreationDateLessThan(inventory.getCreationDate().toString(), inventory.getCreationDate().plusDays(1).toString());

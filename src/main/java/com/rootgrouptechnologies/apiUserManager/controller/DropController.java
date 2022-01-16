@@ -22,8 +22,8 @@ public class DropController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Object> checkInventory(@RequestParam String password) {
-        return new ResponseEntity<>(dropService.checkInventory(password), HttpStatus.OK);
+    public ResponseEntity<Object> checkInventory(@RequestBody DropRequest dropRequest) {
+        return new ResponseEntity<>(dropService.checkInventory(dropRequest), HttpStatus.OK);
     }
 
     @DeleteMapping("/")
