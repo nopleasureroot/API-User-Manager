@@ -128,7 +128,7 @@ public class DropServiceImpl implements DropService {
 
         Integer canceledPayments = DropHelper.calculateCanceledPayments(inventory, licences);
 
-        return new CheckInventoryResponse(DropHelper.convertToDTO(licences), DropHelper.convertToDTO(payments), canceledPayments, message, inventory.getIsActive());
+        return new CheckInventoryResponse(DropHelper.convertToDTO(licences), DropHelper.convertToDTO(payments), canceledPayments, message, inventory);
     }
 
     static class DropHelper {
