@@ -47,7 +47,9 @@ public class DropServiceImpl implements DropService {
         if (licenceTypeRepository.findLicenceTypeById(dropRequest.getLicenceType().getId()) != null
                 && inventoryRepository.findInventoryByPasswordAndQuantityAndLicenceTypeId(dropRequest.getPassword(), dropRequest.getQuantity(), dropRequest.getLicenceType().getId()) == null
                 && dropRequest.getPassword() != null && !dropRequest.getPassword().isEmpty()
-                && dropRequest.getQuantity() >= 1) {
+                && dropRequest.getQuantity() >= 1
+                && inventoryRepository.findInventoryByPassword(dropRequest.getPassword()) == null
+        ) {
             dropIsActive = true;
 
             Inventory inventory = new Inventory();
@@ -133,7 +135,7 @@ public class DropServiceImpl implements DropService {
 
         Integer canceledPayments = DropHelper.calculateCanceledPayments(inventory, licences);
 
-        return new CheckInventoryResponse(DropHelper.convertToDTO(licences), DropHelper.convertToDTO(payments), canceledPayments, message, inventory);
+        return new CheckInventoryResponse(DropHelper.convertToDTO(licences), DropHelper.convertToDTO(payments), canceledPayments, message, ObjectMapper.INSTANCE.toDropDTO(inventory));
     }
 
     static class DropHelper {
@@ -142,32 +144,36 @@ public class DropServiceImpl implements DropService {
             List<LicenceDTO> licenceDTOS = new LinkedList<>();
             List<PaymentDTO> paymentDTOS = new LinkedList<>();
 
-            for (Object object : objects) {
-                if (object instanceof Licence) {
-                    assert licenceDTOS != null;
-                    licenceDTOS.add(ObjectMapper.INSTANCE.toLicenceDTO((Licence) object));
+            if (objects.size() != 0) {
+                for (Object object : objects) {
+                    if (object instanceof Licence) {
+                        assert licenceDTOS != null;
+                        licenceDTOS.add(ObjectMapper.INSTANCE.toLicenceDTO((Licence) object));
 
-                    paymentDTOS = null;
-                    dropDTOS = null;
-                } else if (object instanceof Payment) {
-                    assert paymentDTOS != null;
-                    paymentDTOS.add(ObjectMapper.INSTANCE.toPaymentDTO((Payment) object));
+                        paymentDTOS = null;
+                        dropDTOS = null;
+                    } else if (object instanceof Payment) {
+                        assert paymentDTOS != null;
+                        paymentDTOS.add(ObjectMapper.INSTANCE.toPaymentDTO((Payment) object));
 
-                    licenceDTOS = null;
-                    dropDTOS = null;
-                } else if (object instanceof Inventory){
-                    assert dropDTOS != null;
-                    dropDTOS.add(ObjectMapper.INSTANCE.toDropDTO((Inventory) object));
+                        licenceDTOS = null;
+                        dropDTOS = null;
+                    } else if (object instanceof Inventory) {
+                        assert dropDTOS != null;
+                        dropDTOS.add(ObjectMapper.INSTANCE.toDropDTO((Inventory) object));
 
-                    licenceDTOS = null;
-                    paymentDTOS = null;
+                        licenceDTOS = null;
+                        paymentDTOS = null;
+                    }
                 }
+
+                if (objects.get(0) instanceof Licence) return licenceDTOS;
+                if (objects.get(0) instanceof Payment) return paymentDTOS;
+
+                return dropDTOS;
             }
 
-            if (licenceDTOS != null) return licenceDTOS;
-            if (paymentDTOS != null) return paymentDTOS;
-
-            return dropDTOS;
+            return null;
         }
 
         static private Integer calculateCanceledPayments(Inventory inventory, List<Licence> licences) {
