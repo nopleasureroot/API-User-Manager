@@ -18,4 +18,7 @@ public class Metric {
 
     @Column(name = "date")
     private String date;
+
+    @Column(name = "qty_departed_users")
+    private Integer departedUsers;
 }

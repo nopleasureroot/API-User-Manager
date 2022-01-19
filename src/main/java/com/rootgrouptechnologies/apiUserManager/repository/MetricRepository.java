@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface MetricRepository extends JpaRepository<Metric, Integer> {
     List<Metric> findMetricsByDateBetween(String startDate, String endDate);
+
+    Metric findMetricByDate(String date);
 }

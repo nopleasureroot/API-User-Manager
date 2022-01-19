@@ -27,11 +27,14 @@ public class MemberAnalyticServiceImpl implements MemberAnalyticService {
     public void collectAndRecordMetrics() {
         Metric metric = new Metric();
 
-        Integer currentUsersQuantity = userRepository.findAll().size();
+        int currentUsersQuantity = userRepository.findAll().size();
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         metric.setQuantity(currentUsersQuantity);
         metric.setDate(date);
+
+        Metric previousDayMetric = metricRepository.findMetricByDate(LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        metric.setDepartedUsers(calculateDepartedUsers(currentUsersQuantity, previousDayMetric));
 
         metricRepository.save(metric);
     }
@@ -56,6 +59,15 @@ public class MemberAnalyticServiceImpl implements MemberAnalyticService {
         departedUserDTO.setQuantityIncomeUsers(incomeUsers);
 
         return departedUserDTO;
+    }
+
+    private int calculateDepartedUsers(int todayQtyMembers, Metric previousDayMetric) {
+        int departedUsers = todayQtyMembers - previousDayMetric.getQuantity();
+
+        if (departedUsers > 0) departedUsers = 0;
+        if (departedUsers < 0) departedUsers = -departedUsers;
+
+        return departedUsers;
     }
 
     private double calculateRetentionPercentage(Integer startQty, Integer endQty) {
