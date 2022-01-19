@@ -33,7 +33,7 @@ public class LicenceServiceImpl implements LicenceService {
             licenceDTOS.add(ObjectMapper.INSTANCE.toLicenceDTO(licence));
         }
 
-        return licenceDTOS.subList(licenceDTOS.size() - 10, licenceDTOS.size());
+        return licenceDTOS.subList(licenceDTOS.size() - 15, licenceDTOS.size());
     }
 
     @Override
