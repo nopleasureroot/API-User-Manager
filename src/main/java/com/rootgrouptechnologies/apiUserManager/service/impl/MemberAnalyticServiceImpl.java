@@ -68,7 +68,7 @@ public class MemberAnalyticServiceImpl implements MemberAnalyticService {
             incomeUsers = 0;
         }
 
-        retentionPercentage = ((endQty.doubleValue() - incomeUsers)/startQty)*100;
+        retentionPercentage = Math.round((endQty.doubleValue() - incomeUsers)/startQty*100);
 
         return retentionPercentage;
     }
