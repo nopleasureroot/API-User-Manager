@@ -62,8 +62,6 @@ public class PaymentsAnalyticServiceImpl implements PaymentsAnalyticService {
                 if (compareDates) {
                     if (i == succeededPayments.size() - 1)
                         oneDayIncomeDTOS.add(new OneDayIncomeDTO(oneDayIncome, date, qtyPayments));
-
-                    qtyPayments = 0;
                 } else {
                     oneDayIncomeDTOS.add(new OneDayIncomeDTO(oneDayIncome, date, qtyPayments));
 
