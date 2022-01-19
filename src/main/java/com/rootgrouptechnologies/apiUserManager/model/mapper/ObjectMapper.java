@@ -33,6 +33,10 @@ public interface ObjectMapper {
     @Mapping(source = "licenceType.majorRoleName", target = "role")
     LicenceTypeDTO toLicenceTypeDTO(LicenceType licenceType);
 
+    @Mapping(source = "metric.date", target = "date")
+    @Mapping(source = "metric.departedUsers", target = "departedUsers")
+    MetricDTO toMetricDTO(Metric metric);
+
     @Named("toLicenceDTO")
     default LicenceDTO toLicenceDTO(Licence licence) {
         Integer id;

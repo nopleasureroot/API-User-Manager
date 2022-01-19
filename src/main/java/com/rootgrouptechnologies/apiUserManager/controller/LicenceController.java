@@ -15,7 +15,7 @@ public class LicenceController {
     private final LicenceServiceImpl licenceServiceImpl;
 
     @GetMapping("/")
-    public ResponseEntity<Object> getLicences() {
+    public ResponseEntity<Object> getRecentlyCreatedLicences() {
         return new ResponseEntity<>(licenceServiceImpl.getLicences(), HttpStatus.OK);
     }
 

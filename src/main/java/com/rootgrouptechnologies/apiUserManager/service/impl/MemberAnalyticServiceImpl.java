@@ -2,6 +2,8 @@ package com.rootgrouptechnologies.apiUserManager.service.impl;
 
 import com.rootgrouptechnologies.apiUserManager.entity.Metric;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.DepartedUserDTO;
+import com.rootgrouptechnologies.apiUserManager.model.DTO.MetricDTO;
+import com.rootgrouptechnologies.apiUserManager.model.mapper.ObjectMapper;
 import com.rootgrouptechnologies.apiUserManager.model.request.PeriodTimeRequest;
 import com.rootgrouptechnologies.apiUserManager.repository.MetricRepository;
 import com.rootgrouptechnologies.apiUserManager.repository.UserRepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -43,6 +46,7 @@ public class MemberAnalyticServiceImpl implements MemberAnalyticService {
     public DepartedUserDTO getQuantityDepartedUsers(PeriodTimeRequest periodTimeRequest) {
         DepartedUserDTO departedUserDTO = new DepartedUserDTO();
         List<Metric> metrics = metricRepository.findMetricsByDateBetween(periodTimeRequest.getStartDate(), periodTimeRequest.getEndDate());
+        List<Metric> allMetrics = metricRepository.findAll();
 
         Metric startMetric = metrics.get(0);
         Metric endMetric = metrics.get(metrics.size() - 1);
@@ -57,8 +61,19 @@ public class MemberAnalyticServiceImpl implements MemberAnalyticService {
         departedUserDTO.setPeriodTimeRequest(periodTimeRequest);
         departedUserDTO.setRetentionPercentage(calculateRetentionPercentage(startMetric.getQuantity(), endMetric.getQuantity()));
         departedUserDTO.setQuantityIncomeUsers(incomeUsers);
+        departedUserDTO.setListMetrics(convertToDTOMetrics(allMetrics));
 
         return departedUserDTO;
+    }
+
+    private List<MetricDTO> convertToDTOMetrics(List<Metric> metrics) {
+        List<MetricDTO> list = new LinkedList<>();
+
+        for (Metric metric : metrics) {
+            list.add(ObjectMapper.INSTANCE.toMetricDTO(metric));
+        }
+
+        return list;
     }
 
     private int calculateDepartedUsers(int todayQtyMembers, Metric previousDayMetric) {
