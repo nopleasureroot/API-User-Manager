@@ -1,6 +1,5 @@
 package com.rootgrouptechnologies.apiUserManager.model.DTO;
 
-import com.rootgrouptechnologies.apiUserManager.entity.Metric;
 import com.rootgrouptechnologies.apiUserManager.model.request.PeriodTimeRequest;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

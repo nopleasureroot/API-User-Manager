@@ -43,6 +43,7 @@ public interface ObjectMapper {
         String key;
         Boolean bind;
         String renewal;
+        String creationDate;
 
         if (licence == null) {
             return null;
@@ -53,14 +54,16 @@ public interface ObjectMapper {
             key = licence.getIdentifier();
             bind = licence.getActivated();
             renewal = licence.getRenewalDate().split(" ")[0];
+            creationDate = licence.getCreationDate().split(" ")[0];
         } else {
             id = licence.getId();
             key = licence.getIdentifier();
             bind = false;
             renewal = null;
+            creationDate = licence.getCreationDate().split(" ")[0];
         }
 
-        return new LicenceDTO(id, key, bind, renewal);
+        return new LicenceDTO(id, key, bind, renewal, creationDate);
     }
 
     @Named("toBillingDTO")

@@ -1,8 +1,5 @@
 package com.rootgrouptechnologies.apiUserManager.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.rootgrouptechnologies.apiUserManager.model.request.DropRequest;
 import com.rootgrouptechnologies.apiUserManager.service.impl.DropServiceImpl;
 import lombok.RequiredArgsConstructor;

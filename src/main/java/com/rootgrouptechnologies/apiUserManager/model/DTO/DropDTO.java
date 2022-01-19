@@ -1,6 +1,5 @@
 package com.rootgrouptechnologies.apiUserManager.model.DTO;
 
-import com.rootgrouptechnologies.apiUserManager.entity.LicenceType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 

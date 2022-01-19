@@ -10,4 +10,5 @@ public class LicenceDTO {
     private final String licenceKey;
     private final Boolean keyBind;
     private final String renewalDate;
+    private final String creationDate;
 }

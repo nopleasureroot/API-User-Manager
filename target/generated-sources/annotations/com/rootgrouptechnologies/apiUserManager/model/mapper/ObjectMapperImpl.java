@@ -4,12 +4,14 @@ import com.rootgrouptechnologies.apiUserManager.entity.Billing;
 import com.rootgrouptechnologies.apiUserManager.entity.Inventory;
 import com.rootgrouptechnologies.apiUserManager.entity.Licence;
 import com.rootgrouptechnologies.apiUserManager.entity.LicenceType;
+import com.rootgrouptechnologies.apiUserManager.entity.Metric;
 import com.rootgrouptechnologies.apiUserManager.entity.Payment;
 import com.rootgrouptechnologies.apiUserManager.entity.User;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.BillingDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.DropDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.LicenceDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.LicenceTypeDTO;
+import com.rootgrouptechnologies.apiUserManager.model.DTO.MetricDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.PaymentDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.ResultUserDTO;
 import com.rootgrouptechnologies.apiUserManager.model.DTO.UserDTO;
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-01-19T19:46:37+0300",
+    date = "2022-01-19T21:02:08+0300",
     comments = "version: 1.5.0.Beta1, compiler: javac, environment: Java 11.0.12 (BellSoft)"
 )
 @Component
@@ -129,5 +131,21 @@ public class ObjectMapperImpl implements ObjectMapper {
         LicenceTypeDTO licenceTypeDTO = new LicenceTypeDTO( renewalPrice, role );
 
         return licenceTypeDTO;
+    }
+
+    @Override
+    public MetricDTO toMetricDTO(Metric metric) {
+        if ( metric == null ) {
+            return null;
+        }
+
+        MetricDTO metricDTO = new MetricDTO();
+
+        metricDTO.setDate( metric.getDate() );
+        if ( metric.getDepartedUsers() != null ) {
+            metricDTO.setDepartedUsers( metric.getDepartedUsers() );
+        }
+
+        return metricDTO;
     }
 }
