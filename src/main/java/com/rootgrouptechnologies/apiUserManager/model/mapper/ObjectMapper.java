@@ -22,6 +22,12 @@ public interface ObjectMapper {
 
     PaymentDTO toPaymentDTO(Payment payment);
 
+    @Mapping(source = "inventory.password", target = "password")
+    @Mapping(source = "inventory.quantity", target = "quantity")
+    @Mapping(source = "inventory.isActive", target = "isActive")
+    @Mapping(source = "inventory.creationDate", target = "creationDate")
+    DropDTO toDropDTO(Inventory inventory);
+
     @Named("toLicenceTypeDTO")
     @Mapping(source = "licenceType.renewPrice", target = "renewalPrice")
     @Mapping(source = "licenceType.majorRoleName", target = "role")
