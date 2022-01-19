@@ -9,4 +9,5 @@ import lombok.RequiredArgsConstructor;
 public class OneDayIncomeDTO {
     private Integer oneDayIncome;
     private String date;
+    private Integer qty;
 }

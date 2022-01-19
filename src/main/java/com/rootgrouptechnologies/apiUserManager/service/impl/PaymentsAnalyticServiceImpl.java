@@ -40,6 +40,7 @@ public class PaymentsAnalyticServiceImpl implements PaymentsAnalyticService {
             Integer totalIncome = 0;
             int oneDayIncome = 0;
             String date;
+            int qtyPayments = 0;
 
             for (int i = 0; i < succeededPayments.size(); i++) {
                 boolean compareDates;
@@ -56,14 +57,18 @@ public class PaymentsAnalyticServiceImpl implements PaymentsAnalyticService {
 
                 date = succeededPayments.get(i).getPaymentDate();
                 oneDayIncome += succeededPayments.get(i).getAmount();
+                qtyPayments++;
 
                 if (compareDates) {
                     if (i == succeededPayments.size() - 1)
-                        oneDayIncomeDTOS.add(new OneDayIncomeDTO(oneDayIncome, date));
+                        oneDayIncomeDTOS.add(new OneDayIncomeDTO(oneDayIncome, date, qtyPayments));
+
+                    qtyPayments = 0;
                 } else {
-                    oneDayIncomeDTOS.add(new OneDayIncomeDTO(oneDayIncome, date));
+                    oneDayIncomeDTOS.add(new OneDayIncomeDTO(oneDayIncome, date, qtyPayments));
 
                     oneDayIncome = 0;
+                    qtyPayments = 0;
                 }
 
                 totalIncome += succeededPayments.get(i).getAmount();
